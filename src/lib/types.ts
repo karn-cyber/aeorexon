@@ -89,6 +89,13 @@ export interface Product {
   documents?: ProductDocument[];
   isDirectBuy: boolean;
   featured?: boolean;
+  /** List price in INR. Set by an admin. When absent, the product is quote-only. */
+  price?: number;
+  /** Optional percentage discount (0–100) applied to `price`. */
+  discountPercent?: number;
+  /** Optional short label for the active offer, e.g. "Monsoon Sale". */
+  offerLabel?: string;
+  stockQty?: number;
 }
 
 export interface Category {

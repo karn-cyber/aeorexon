@@ -34,6 +34,7 @@ export function ProductGallery({
           sizes="(max-width: 1024px) 100vw, 40vw"
           className="object-contain p-4"
           priority
+          unoptimized={current.url.startsWith("data:")}
         />
       </div>
       {images.length > 1 && (
@@ -53,6 +54,7 @@ export function ProductGallery({
                 fill
                 sizes="64px"
                 className="object-contain p-1"
+                unoptimized={img.url.startsWith("data:")}
               />
             </button>
           ))}

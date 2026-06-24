@@ -79,6 +79,7 @@ export default function ComparePage() {
                           fill
                           sizes="200px"
                           className="object-contain p-2"
+                          unoptimized={img.url.startsWith("data:")}
                         />
                       </span>
                     </Link>

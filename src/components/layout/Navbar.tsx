@@ -1,5 +1,9 @@
 import Link from "next/link";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 import { SearchBar } from "./SearchBar";
+import { Icon } from "@/components/Icon";
+import { CartLink } from "@/components/cart/CartLink";
+import { getCurrentUserInfo } from "@/lib/auth";
 
 const navLinks = [
   { href: "/products", label: "Catalogue" },
@@ -9,7 +13,10 @@ const navLinks = [
   { href: "/categories/controllers", label: "Controllers" },
 ];
 
-export function Navbar() {
+export async function Navbar() {
+  const { isAdmin, email } = await getCurrentUserInfo();
+  const signedIn = Boolean(email);
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:gap-6">
@@ -19,15 +26,18 @@ export function Navbar() {
             <span className="text-accent">O</span>
             <span className="text-primary">REXON</span>
           </Link>
-          <Link
-            href="/rfq"
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white lg:hidden"
-          >
-            Get a Quote
-          </Link>
+          <div className="flex items-center gap-3 lg:hidden">
+            <CartLink />
+            <Link
+              href="/rfq"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white"
+            >
+              Quote
+            </Link>
+          </div>
         </div>
 
-        <div className="flex-1 lg:max-w-xl">
+        <div className="flex-1 lg:max-w-lg">
           <SearchBar />
         </div>
 
@@ -37,6 +47,28 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
+
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 font-semibold text-primary hover:text-accent"
+            >
+              <Icon name="layout-dashboard" size={16} /> Admin
+            </Link>
+          )}
+
+          <CartLink />
+
+          {signedIn ? (
+            <UserButton />
+          ) : (
+            <SignInButton mode="modal">
+              <button className="inline-flex items-center gap-1.5 rounded-lg border border-border px-4 py-2 font-semibold text-text hover:border-primary-light hover:text-primary">
+                <Icon name="log-in" size={16} /> Log in
+              </button>
+            </SignInButton>
+          )}
+
           <Link
             href="/rfq"
             className="rounded-lg bg-accent px-4 py-2 font-semibold text-white hover:brightness-110"

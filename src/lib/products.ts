@@ -61,3 +61,41 @@ export async function getProductsBySlugs(slugs: string[]): Promise<Product[]> {
   const map = new Map(all.map((p) => [p.slug, p]));
   return slugs.map((s) => map.get(s)).filter((p): p is Product => Boolean(p));
 }
+
+/** Admin: create or update a product (upsert by slug) in MongoDB. */
+export async function upsertProduct(product: Product): Promise<void> {
+  const client = await clientPromise;
+  const col = client.db(DB_NAME).collection<Product>(COLLECTION);
+  await col.createIndex({ slug: 1 }, { unique: true });
+  // Strip any _id to avoid immutable-field update errors.
+  const { ...doc } = product as Product & { _id?: unknown };
+  delete (doc as { _id?: unknown })._id;
+  await col.updateOne({ slug: product.slug }, { $set: doc }, { upsert: true });
+}
+
+/** Admin: patch a subset of fields on an existing product. */
+export async function patchProduct(
+  slug: string,
+  patch: Partial<Product>
+): Promise<void> {
+  const client = await clientPromise;
+  await client
+    .db(DB_NAME)
+    .collection<Product>(COLLECTION)
+    .updateOne({ slug }, { $set: patch });
+}
+
+/** Admin: delete a product by slug. */
+export async function deleteProduct(slug: string): Promise<void> {
+  const client = await clientPromise;
+  await client.db(DB_NAME).collection<Product>(COLLECTION).deleteOne({ slug });
+}
+
+export async function countProducts(): Promise<number> {
+  try {
+    const client = await clientPromise;
+    return await client.db(DB_NAME).collection(COLLECTION).countDocuments();
+  } catch {
+    return seedProducts.length;
+  }
+}

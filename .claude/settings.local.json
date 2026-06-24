@@ -19,7 +19,14 @@
       "Bash(node -e \"\\(async\\(\\)=>{for\\(const p of ['/','/products','/products/tekna-aks']\\){const r=await fetch\\('http://localhost:3000'+p\\);console.log\\(p, r.status\\);}}\\)\\(\\)\")",
       "Bash(node -e \"fetch\\('http://localhost:3000/products'\\).then\\(r=>console.log\\('warm',r.status\\)\\)\")",
       "Bash(git add *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(node -e \"console.log\\(require\\('@clerk/nextjs/package.json'\\).version\\)\")",
+      "Bash(node -e \"const p=require\\('@clerk/nextjs/package.json'\\); console.log\\('peer next:', \\(p.peerDependencies||{}\\).next\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const p=JSON.parse\\(fs.readFileSync\\('node_modules/@clerk/nextjs/package.json','utf8'\\)\\);console.log\\('peer next:',\\(p.peerDependencies||{}\\).next, '| react:',\\(p.peerDependencies||{}\\).react\\)\")",
+      "Bash(node -e \"fetch\\('http://localhost:3000/'\\).then\\(r=>console.log\\('home',r.status\\)\\)\")"
     ]
   }
 }

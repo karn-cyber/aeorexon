@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Product } from "@/lib/types";
 import { flowSummary, pressureSummary, controlLabel, primaryImage } from "@/lib/format";
 import { Icon } from "@/components/Icon";
+import { PriceTag } from "./PriceTag";
 import { CompareToggle } from "./CompareToggle";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -31,6 +32,7 @@ export function ProductCard({ product }: { product: Product }) {
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-contain p-4 transition group-hover:scale-[1.03]"
+              unoptimized={image.url.startsWith("data:")}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-text-muted">
@@ -77,6 +79,10 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           )}
           {control && <span>{control} control</span>}
+        </div>
+
+        <div className="mt-3">
+          <PriceTag product={product} size="sm" />
         </div>
       </Link>
 

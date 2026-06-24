@@ -10,6 +10,10 @@ import { ApplicationTags } from "@/components/product/ApplicationTags";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { CompareToggle } from "@/components/product/CompareToggle";
 import { ProductGallery } from "@/components/product/ProductGallery";
+import { PriceTag } from "@/components/product/PriceTag";
+import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { getPriceInfo } from "@/lib/pricing";
+import { primaryImage } from "@/lib/format";
 import { Icon } from "@/components/Icon";
 
 export async function generateStaticParams() {
@@ -35,6 +39,8 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
   if (!product) notFound();
 
   const callouts = keyCallouts(product);
+  const priceInfo = getPriceInfo(product);
+  const image = primaryImage(product);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -121,6 +127,9 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
 
           {/* Key callouts + CTA */}
           <div className="rounded-xl border border-border bg-surface p-6">
+            <div className="mb-4 border-b border-border pb-4">
+              <PriceTag product={product} size="lg" />
+            </div>
             <div className="space-y-4">
               {callouts.map((c) => (
                 <div key={c.label} className="flex items-center justify-between">
@@ -130,14 +139,21 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
               ))}
             </div>
             <div className="mt-6 space-y-2">
-              {product.isDirectBuy && (
-                <button className="w-full rounded-lg bg-accent py-3 font-semibold text-white hover:brightness-110">
-                  Add to Cart
-                </button>
-              )}
+              {priceInfo.hasPrice ? (
+                <AddToCartButton
+                  slug={product.slug}
+                  name={product.name}
+                  unitPrice={priceInfo.price}
+                  image={image?.url}
+                />
+              ) : null}
               <Link
                 href="/rfq"
-                className="block w-full rounded-lg border border-primary py-3 text-center font-semibold text-primary hover:bg-primary hover:text-white"
+                className={`block w-full rounded-lg py-3 text-center font-semibold ${
+                  priceInfo.hasPrice
+                    ? "border border-primary text-primary hover:bg-primary hover:text-white"
+                    : "bg-accent text-white hover:brightness-110"
+                }`}
               >
                 Request a Quote
               </Link>
