@@ -4,6 +4,7 @@ import { searchProducts, matchIntentTags, parseNumericIntent } from "@/lib/searc
 import { useCases } from "@/data/categories";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SearchBar } from "@/components/layout/SearchBar";
+import { Icon } from "@/components/Icon";
 
 export const metadata = { title: "Search — Aorexon" };
 
@@ -56,9 +57,10 @@ export default async function SearchPage(props: PageProps<"/search">) {
               <Link
                 key={u.slug}
                 href={`/use-cases/${u.slug}`}
-                className="rounded-full bg-accent px-3 py-1 font-medium text-white hover:brightness-110"
+                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 font-medium text-white hover:brightness-110"
               >
-                {u.icon} {u.title.replace(/^.*for /i, "")}
+                <Icon name={u.icon} size={14} />
+                {u.title.replace(/^.*for /i, "")}
               </Link>
             ))}
           </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProductModel } from "@/lib/types";
+import { Icon } from "@/components/Icon";
 
 interface Props {
   models: ProductModel[];
@@ -101,8 +102,8 @@ export function ModelSelector({ models, columns }: Props) {
                     <td key={c.key} className="px-4 py-2.5 text-text">
                       {m[c.key] !== undefined ? String(m[c.key]) : "—"}
                       {c.key === "code" && hit && (
-                        <span className="ml-2 text-xs font-semibold text-success">
-                          ✓ match
+                        <span className="ml-2 inline-flex items-center gap-1 text-xs font-semibold text-success">
+                          <Icon name="check" size={12} /> match
                         </span>
                       )}
                     </td>

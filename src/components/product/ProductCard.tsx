@@ -1,6 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/lib/types";
-import { flowSummary, pressureSummary, controlLabel } from "@/lib/format";
+import { flowSummary, pressureSummary, controlLabel, primaryImage } from "@/lib/format";
+import { Icon } from "@/components/Icon";
 import { CompareToggle } from "./CompareToggle";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -16,9 +18,27 @@ export function ProductCard({ product }: { product: Product }) {
   const flow = flowSummary(product);
   const pressure = pressureSummary(product);
   const control = controlLabel(product);
+  const image = primaryImage(product);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition hover:shadow-md">
+      <Link href={`/products/${product.slug}`} className="block">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-white">
+          {image ? (
+            <Image
+              src={image.url}
+              alt={image.alt || product.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain p-4 transition group-hover:scale-[1.03]"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-text-muted">
+              <Icon name="image-off" size={40} strokeWidth={1.5} />
+            </div>
+          )}
+        </div>
+      </Link>
       <Link href={`/products/${product.slug}`} className="flex flex-1 flex-col p-5">
         <div className="mb-2 flex items-center justify-between">
           <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary">

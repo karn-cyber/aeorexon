@@ -9,6 +9,8 @@ import { ModelSelector } from "@/components/product/ModelSelector";
 import { ApplicationTags } from "@/components/product/ApplicationTags";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { CompareToggle } from "@/components/product/CompareToggle";
+import { ProductGallery } from "@/components/product/ProductGallery";
+import { Icon } from "@/components/Icon";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -69,7 +71,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
                 <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                   {product.usedFor.map((u) => (
                     <li key={u} className="flex items-start gap-2 text-sm text-text">
-                      <span className="mt-0.5 text-accent">✓</span>
+                      <Icon name="check" size={16} className="mt-0.5 shrink-0 text-accent" />
                       {u}
                     </li>
                   ))}
@@ -115,6 +117,8 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
 
         {/* Right column (sticky) */}
         <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+          <ProductGallery images={product.images ?? []} name={product.name} />
+
           {/* Key callouts + CTA */}
           <div className="rounded-xl border border-border bg-surface p-6">
             <div className="space-y-4">
@@ -158,7 +162,7 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
                       href={d.url}
                       className="flex items-center gap-2 text-sm font-medium text-accent hover:underline"
                     >
-                      <span aria-hidden>📄</span> {d.name}
+                      <Icon name="file-text" size={16} /> {d.name}
                     </a>
                   </li>
                 ))}

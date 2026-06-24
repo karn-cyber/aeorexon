@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SearchBar } from "@/components/layout/SearchBar";
+import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
 import { categories, useCases } from "@/data/categories";
 import { getFeaturedProducts } from "@/lib/products";
@@ -61,7 +62,7 @@ export default async function Home() {
                 href={`/use-cases/${u.slug}`}
                 className="group rounded-xl border border-border bg-surface p-5 transition hover:border-primary-light hover:shadow-md"
               >
-                <div className="text-3xl">{u.icon}</div>
+                <Icon name={u.icon} size={32} strokeWidth={1.75} className="text-accent" />
                 <div className="mt-3 font-bold text-text group-hover:text-primary">
                   {u.title.replace(/^Dosing (Pumps )?for /i, "").replace(/^Chemical Dosing for /i, "")}
                 </div>
@@ -81,7 +82,7 @@ export default async function Home() {
                 href={`/categories/${c.slug}`}
                 className="group flex w-56 shrink-0 flex-col rounded-xl border border-border bg-surface p-5 transition hover:border-primary-light hover:shadow-md"
               >
-                <div className="text-3xl">{c.icon}</div>
+                <Icon name={c.icon} size={32} strokeWidth={1.75} className="text-primary" />
                 <div className="mt-3 font-bold text-text group-hover:text-primary">{c.name}</div>
                 <div className="mt-1 text-sm text-text-muted">{c.short}</div>
               </Link>

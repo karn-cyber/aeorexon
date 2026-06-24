@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCompareStore } from "@/stores/compareStore";
+import { Icon } from "@/components/Icon";
 
 export function CompareBar() {
   const slugs = useCompareStore((s) => s.slugs);
@@ -31,7 +32,7 @@ export function CompareBar() {
                 className="text-primary/60 hover:text-error"
                 aria-label={`Remove ${slug}`}
               >
-                ✕
+                <Icon name="x" size={12} />
               </button>
             </span>
           ))}

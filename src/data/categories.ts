@@ -5,37 +5,37 @@ export const categories: Category[] = [
     slug: "solenoid-wall",
     name: "Solenoid Pumps (Wall-Mounted)",
     short: "Compact wall-mounted solenoid dosing pumps — analogue to fully digital.",
-    icon: "🧱",
+    icon: "panel-top",
   },
   {
     slug: "solenoid-base",
     name: "Solenoid Pumps (Base-Mounted)",
     short: "Professional base/skid-mounted solenoid pumps with precision regulation.",
-    icon: "🛠️",
+    icon: "server",
   },
   {
     slug: "motor-driven",
     name: "Motor-Driven Pumps",
     short: "Heavy-duty diaphragm & piston pumps for high flow and pressure.",
-    icon: "⚙️",
+    icon: "cog",
   },
   {
     slug: "peristaltic",
     name: "Peristaltic Pumps",
     short: "Tube pumps for viscous, abrasive or shear-sensitive liquids.",
-    icon: "🔄",
+    icon: "refresh-cw",
   },
   {
     slug: "controllers",
     name: "Controllers & Instruments",
     short: "Single- and multi-parameter water quality controllers.",
-    icon: "📟",
+    icon: "gauge",
   },
   {
     slug: "accessories",
     name: "Accessories & Spares",
     short: "Dampeners, valves and the parts that complete a dosing skid.",
-    icon: "🔧",
+    icon: "wrench",
   },
 ];
 
@@ -47,7 +47,7 @@ export const useCases: UseCase[] = [
       "Coagulant, pH correction and disinfectant dosing for potable and process water plants.",
     primarySlug: "tekna-akl",
     altSlugs: ["tekba-r", "spring-ms1"],
-    icon: "💧",
+    icon: "droplets",
   },
   {
     slug: "swimming-pool",
@@ -56,7 +56,7 @@ export const useCases: UseCase[] = [
       "Maintain pH and free chlorine automatically — without chemicals attacking your pump.",
     primarySlug: "tekna-tpr",
     altSlugs: ["pool-kronos", "kompact"],
-    icon: "🏊",
+    icon: "waves",
   },
   {
     slug: "cooling-tower",
@@ -64,7 +64,7 @@ export const useCases: UseCase[] = [
     intro: "Scheduled biocide and scale/corrosion inhibitor dosing for cooling circuits.",
     primarySlug: "tekna-tck",
     altSlugs: ["tekna-apg", "spring-ms1"],
-    icon: "🌡️",
+    icon: "thermometer",
   },
   {
     slug: "boiler-feed",
@@ -72,7 +72,7 @@ export const useCases: UseCase[] = [
     intro: "Oxygen scavenger and anti-scale dosing into high-pressure boiler feed lines.",
     primarySlug: "spring-ps2-hp",
     altSlugs: ["spring-ps2", "spring-ms1"],
-    icon: "🔥",
+    icon: "flame",
   },
   {
     slug: "reverse-osmosis",
@@ -80,7 +80,7 @@ export const useCases: UseCase[] = [
     intro: "Antiscalant and pH dosing proportional to feed flow for RO membranes.",
     primarySlug: "tekna-tpg",
     altSlugs: ["tekba"],
-    icon: "🧫",
+    icon: "filter",
   },
   {
     slug: "wastewater",
@@ -88,7 +88,7 @@ export const useCases: UseCase[] = [
     intro: "Flocculant, coagulant and neutralisation dosing for effluent treatment.",
     primarySlug: "spring-ms1",
     altSlugs: ["kosmo-mm1", "kronos-20"],
-    icon: "♻️",
+    icon: "recycle",
   },
   {
     slug: "food-beverage",
@@ -96,7 +96,7 @@ export const useCases: UseCase[] = [
     intro: "Food-grade and clean-in-place dosing with wide chemical compatibility.",
     primarySlug: "kosmo-mm1",
     altSlugs: ["spring-ms1", "kronos-10"],
-    icon: "🥤",
+    icon: "cup-soda",
   },
   {
     slug: "solar-offgrid",
@@ -104,7 +104,7 @@ export const useCases: UseCase[] = [
     intro: "12 Vdc dosing pumps for remote sites running on solar panels or batteries.",
     primarySlug: "tekna-12vdc",
     altSlugs: ["spring-ps1"],
-    icon: "☀️",
+    icon: "sun",
   },
   {
     slug: "hazardous-area",
@@ -112,7 +112,7 @@ export const useCases: UseCase[] = [
     intro: "Zone 2 explosion-protected dosing for solvents, fuels and offshore use.",
     primarySlug: "tekna-atex",
     altSlugs: [],
-    icon: "⚠️",
+    icon: "triangle-alert",
   },
   {
     slug: "high-pressure",
@@ -120,7 +120,7 @@ export const useCases: UseCase[] = [
     intro: "Plunger piston pumps for injection into pressurised pipelines up to 100 bar.",
     primarySlug: "spring-ps2-hp",
     altSlugs: ["spring-ps2"],
-    icon: "🗜️",
+    icon: "gauge",
   },
   {
     slug: "electroplating",
@@ -128,7 +128,7 @@ export const useCases: UseCase[] = [
     intro: "Degreasing, nickel and copper plating chemistry dosing at scale.",
     primarySlug: "kosmo-mm2",
     altSlugs: ["spring-ps2"],
-    icon: "🔩",
+    icon: "bolt",
   },
   {
     slug: "ph-control",
@@ -136,7 +136,7 @@ export const useCases: UseCase[] = [
     intro: "Measure-and-dose pH/ORP control with built-in or standalone controllers.",
     primarySlug: "tekna-tpr",
     altSlugs: ["kontrol-40"],
-    icon: "🧪",
+    icon: "flask-conical",
   },
   {
     slug: "chlorination",
@@ -144,7 +144,7 @@ export const useCases: UseCase[] = [
     intro: "Reliable chlorine and hypochlorite dosing for safe water disinfection.",
     primarySlug: "tekna-aks",
     altSlugs: ["komba-dms", "pool-kronos"],
-    icon: "🧴",
+    icon: "spray-can",
   },
   {
     slug: "iot-remote",
@@ -152,6 +152,6 @@ export const useCases: UseCase[] = [
     intro: "Wi-Fi and Modbus pumps you can monitor and program from anywhere.",
     primarySlug: "spring-elektra",
     altSlugs: ["tekba-r", "tekba"],
-    icon: "📡",
+    icon: "radio-tower",
   },
 ];

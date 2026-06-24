@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useCompareStore } from "@/stores/compareStore";
 import { productsBySlug } from "@/data/products";
+import { primaryImage } from "@/lib/format";
+import { Icon } from "@/components/Icon";
 import type { Product } from "@/lib/types";
 
 const ROWS: { key: string; label: string; get: (p: Product) => string }[] = [
@@ -63,22 +66,39 @@ export default function ComparePage() {
           <thead>
             <tr className="border-b border-border">
               <th className="w-40 px-4 py-3" />
-              {products.map((p) => (
+              {products.map((p) => {
+                const img = primaryImage(p);
+                return (
                 <th key={p.slug} className="px-4 py-3 text-left align-top">
+                  {img && (
+                    <Link href={`/products/${p.slug}`} className="mb-2 block">
+                      <span className="relative block h-24 w-full overflow-hidden rounded-lg border border-border bg-white">
+                        <Image
+                          src={img.url}
+                          alt={img.alt || p.name}
+                          fill
+                          sizes="200px"
+                          className="object-contain p-2"
+                        />
+                      </span>
+                    </Link>
+                  )}
                   <Link href={`/products/${p.slug}`} className="font-bold text-primary hover:underline">
                     {p.name}
                   </Link>
                   <button
                     onClick={() => remove(p.slug)}
-                    className="ml-2 text-xs text-text-muted hover:text-error"
+                    className="ml-2 inline-flex text-text-muted hover:text-error"
+                    aria-label={`Remove ${p.name}`}
                   >
-                    ✕
+                    <Icon name="x" size={14} />
                   </button>
                   <p className="mt-1 line-clamp-2 text-xs font-normal text-text-muted">
                     {p.shortDesc}
                   </p>
                 </th>
-              ))}
+                );
+              })}
             </tr>
           </thead>
           <tbody>

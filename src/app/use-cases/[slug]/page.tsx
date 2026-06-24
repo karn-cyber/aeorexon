@@ -5,6 +5,7 @@ import { useCases } from "@/data/categories";
 import { getProductBySlug, getProductsBySlugs, getProductsByApplication } from "@/lib/products";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductGrid } from "@/components/product/ProductGrid";
+import { Icon } from "@/components/Icon";
 
 export function generateStaticParams() {
   return useCases.map((u) => ({ slug: u.slug }));
@@ -35,7 +36,7 @@ export default async function UseCasePage(props: PageProps<"/use-cases/[slug]">)
     <div>
       <section className="bg-primary text-white">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-          <div className="text-5xl">{uc.icon}</div>
+          <Icon name={uc.icon} size={56} strokeWidth={1.5} className="mx-auto text-accent" />
           <h1 className="mt-4 text-4xl font-extrabold">{uc.title}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-lg text-white/70">{uc.intro}</p>
         </div>

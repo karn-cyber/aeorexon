@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Unused intermediate product image sources (only product-images/ is used by the app)
+/public/products/product_images_raw/
+/public/products/sessions/

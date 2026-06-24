@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { productsBySlug } from "@/data/products";
+import { Icon } from "@/components/Icon";
 
 // The signature Aorexon feature: a context-aware panel that reads the product's
 // upsellRules and links the buyer to the right next-tier / alternative product.
@@ -11,7 +12,7 @@ export function UseCaseMatchPanel({ product }: { product: Product }) {
   return (
     <section className="rounded-xl border border-accent/30 bg-accent-light/40 p-5">
       <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-accent">
-        <span aria-hidden>🎯</span> Is this the right fit?
+        <Icon name="target" size={16} /> Is this the right fit?
       </h2>
       <ul className="mt-3 space-y-2">
         {rules.map((rule) => (

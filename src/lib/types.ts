@@ -54,6 +54,12 @@ export interface ProductRelation {
   type: RelationType;
 }
 
+export interface ProductImage {
+  url: string;
+  alt?: string;
+  isPrimary?: boolean;
+}
+
 export interface ProductDocument {
   name: string;
   url: string;
@@ -79,6 +85,7 @@ export interface Product {
   applicationTags: string[];
   upsellRules: UpsellRule[];
   relatedProducts: ProductRelation[];
+  images?: ProductImage[];
   documents?: ProductDocument[];
   isDirectBuy: boolean;
   featured?: boolean;

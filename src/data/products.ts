@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/types";
+import { productImages } from "./productImages";
 
 // Full Aorexon catalogue. All products from the SEKO / Water & Industry (W&I)
 // range. This file is the source of truth; the seed script loads it into MongoDB.
@@ -1532,6 +1533,12 @@ export const products: Product[] = [
     isDirectBuy: true,
   },
 ];
+
+// Attach images (generated from public/products/product-images/) to each product
+// so they are persisted to MongoDB by the seeder and available everywhere.
+for (const p of products) {
+  p.images = productImages[p.slug] ?? [];
+}
 
 export const productsBySlug: Record<string, Product> = Object.fromEntries(
   products.map((p) => [p.slug, p])

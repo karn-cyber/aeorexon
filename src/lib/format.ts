@@ -1,4 +1,10 @@
-import type { Product } from "@/lib/types";
+import type { Product, ProductImage } from "@/lib/types";
+
+/** The product's primary image, or the first available, or null. */
+export function primaryImage(p: Product): ProductImage | null {
+  const imgs = p.images ?? [];
+  return imgs.find((i) => i.isPrimary) ?? imgs[0] ?? null;
+}
 
 /** Short "0.4–110 l/h" style flow summary. */
 export function flowSummary(p: Product): string | null {
