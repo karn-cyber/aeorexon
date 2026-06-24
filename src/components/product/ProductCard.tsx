@@ -1,0 +1,74 @@
+import Link from "next/link";
+import type { Product } from "@/lib/types";
+import { flowSummary, pressureSummary, controlLabel } from "@/lib/format";
+import { CompareToggle } from "./CompareToggle";
+
+const CATEGORY_LABELS: Record<string, string> = {
+  "solenoid-wall": "Solenoid · Wall",
+  "solenoid-base": "Solenoid · Base",
+  "motor-driven": "Motor-Driven",
+  peristaltic: "Peristaltic",
+  controllers: "Controller",
+  accessories: "Accessory",
+};
+
+export function ProductCard({ product }: { product: Product }) {
+  const flow = flowSummary(product);
+  const pressure = pressureSummary(product);
+  const control = controlLabel(product);
+
+  return (
+    <div className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition hover:shadow-md">
+      <Link href={`/products/${product.slug}`} className="flex flex-1 flex-col p-5">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-primary">
+            {CATEGORY_LABELS[product.category] ?? product.category}
+          </span>
+          <div className="flex gap-1">
+            {product.specs.atex && (
+              <span className="rounded bg-warning/15 px-1.5 py-0.5 text-[10px] font-bold text-warning">
+                ATEX
+              </span>
+            )}
+            {product.specs.wifiCapable && (
+              <span className="rounded bg-success/15 px-1.5 py-0.5 text-[10px] font-bold text-success">
+                Wi-Fi
+              </span>
+            )}
+          </div>
+        </div>
+
+        <h3 className="text-lg font-bold text-text group-hover:text-primary">
+          {product.name}
+        </h3>
+        <p className="mt-1 line-clamp-3 flex-1 text-sm text-text-muted">
+          {product.shortDesc}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-text-muted">
+          {flow && (
+            <span>
+              <span className="font-semibold text-text">{flow}</span> flow
+            </span>
+          )}
+          {pressure && (
+            <span>
+              <span className="font-semibold text-text">{pressure}</span>
+            </span>
+          )}
+          {control && <span>{control} control</span>}
+        </div>
+      </Link>
+
+      <div className="flex items-center justify-between border-t border-border px-5 py-3">
+        <CompareToggle slug={product.slug} />
+        <Link
+          href={`/products/${product.slug}`}
+          className="text-sm font-semibold text-accent hover:underline"
+        >
+          View details →
+        </Link>
+      </div>
+    </div>
+  );
+}

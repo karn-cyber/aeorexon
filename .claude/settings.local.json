@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm ls *)",
+      "Bash(rm /Users/neelanshu./aorexon/scripts/seed.mjs && echo \"removed standalone seed script\")"
+    ]
+  }
+}
