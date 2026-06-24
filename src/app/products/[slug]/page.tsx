@@ -50,41 +50,43 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
         <span className="text-text">{product.name}</span>
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-        {/* Left column */}
-        <div className="space-y-10">
-          {/* Hero */}
-          <section>
-            <div className="flex flex-wrap items-center gap-2">
-              {product.specs.atex && (
-                <span className="rounded bg-warning/15 px-2 py-0.5 text-xs font-bold text-warning">ATEX</span>
-              )}
-              {product.specs.wifiCapable && (
-                <span className="rounded bg-success/15 px-2 py-0.5 text-xs font-bold text-success">Wi-Fi</span>
-              )}
-              <span className="text-xs font-semibold uppercase tracking-wide text-text-muted">
-                {product.brand}
-              </span>
-            </div>
-            <h1 className="mt-2 text-3xl font-extrabold text-text">{product.fullName ?? product.name}</h1>
-            <p className="mt-3 text-lg text-text-muted">{product.shortDesc}</p>
+      {/* Full-width header */}
+      <header className="mb-6">
+        <div className="flex flex-wrap items-center gap-2">
+          {product.specs.atex && (
+            <span className="rounded bg-warning/15 px-2 py-0.5 text-xs font-bold text-warning">ATEX</span>
+          )}
+          {product.specs.wifiCapable && (
+            <span className="rounded bg-success/15 px-2 py-0.5 text-xs font-bold text-success">Wi-Fi</span>
+          )}
+          <span className="text-xs font-semibold uppercase tracking-wide text-text-muted">
+            {product.brand}
+          </span>
+        </div>
+        <h1 className="mt-2 text-2xl font-extrabold text-text sm:text-3xl">
+          {product.fullName ?? product.name}
+        </h1>
+        <p className="mt-2 text-base text-text-muted sm:mt-3 sm:text-lg">{product.shortDesc}</p>
+      </header>
 
-            {product.usedFor && product.usedFor.length > 0 && (
-              <div className="mt-6 rounded-xl border border-border bg-surface p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-primary">
-                  This product is for:
-                </h2>
-                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                  {product.usedFor.map((u) => (
-                    <li key={u} className="flex items-start gap-2 text-sm text-text">
-                      <Icon name="check" size={16} className="mt-0.5 shrink-0 text-accent" />
-                      {u}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </section>
+      <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-10">
+        {/* Left column — details (after gallery/price on mobile) */}
+        <div className="order-2 space-y-8 lg:order-1 lg:space-y-10">
+          {product.usedFor && product.usedFor.length > 0 && (
+            <section className="rounded-xl border border-border bg-surface p-5">
+              <h2 className="text-sm font-bold uppercase tracking-wide text-primary">
+                This product is for:
+              </h2>
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {product.usedFor.map((u) => (
+                  <li key={u} className="flex items-start gap-2 text-sm text-text">
+                    <Icon name="check" size={16} className="mt-0.5 shrink-0 text-accent" />
+                    {u}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* Use-case description */}
           <section>
@@ -121,8 +123,8 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
           </section>
         </div>
 
-        {/* Right column (sticky) */}
-        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        {/* Right column — gallery + price + CTA (first on mobile, sticky on desktop) */}
+        <div className="order-1 space-y-6 lg:order-2 lg:sticky lg:top-24 lg:self-start">
           <ProductGallery images={product.images ?? []} name={product.name} />
 
           {/* Key callouts + CTA */}

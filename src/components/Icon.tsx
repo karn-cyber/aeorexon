@@ -41,6 +41,8 @@ import {
   LayoutDashboard,
   ChevronRight,
   Save,
+  Menu,
+  SlidersHorizontal,
   type LucideIcon,
 } from "lucide-react";
 
@@ -92,6 +94,8 @@ const ICONS: Record<string, LucideIcon> = {
   "layout-dashboard": LayoutDashboard,
   "chevron-right": ChevronRight,
   save: Save,
+  menu: Menu,
+  "sliders-horizontal": SlidersHorizontal,
 };
 
 export type IconName = keyof typeof ICONS;

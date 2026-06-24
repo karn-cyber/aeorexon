@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Product, CategorySlug } from "@/lib/types";
 import { ProductGrid } from "@/components/product/ProductGrid";
+import { Icon } from "@/components/Icon";
 
 const CATEGORY_OPTIONS: { value: CategorySlug; label: string }[] = [
   { value: "solenoid-wall", label: "Solenoid · Wall" },
@@ -40,7 +41,7 @@ function CheckRow({
   label: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-2 py-1 text-sm text-text-muted hover:text-text">
+    <label className="flex cursor-pointer items-center gap-2 py-1.5 text-sm text-text-muted hover:text-text">
       <input
         type="checkbox"
         checked={checked}
@@ -52,6 +53,17 @@ function CheckRow({
   );
 }
 
+function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="border-b border-border py-4 first:pt-0 last:border-0 lg:rounded-xl lg:border lg:bg-surface lg:p-4">
+      <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-text-muted">
+        {title}
+      </h3>
+      {children}
+    </div>
+  );
+}
+
 export function CatalogueExplorer({ products }: { products: Product[] }) {
   const [cats, setCats] = useState<Set<string>>(new Set());
   const [flowIdx, setFlowIdx] = useState<number | null>(null);
@@ -60,10 +72,10 @@ export function CatalogueExplorer({ products }: { products: Product[] }) {
   const [atexOnly, setAtexOnly] = useState(false);
   const [wifiOnly, setWifiOnly] = useState(false);
   const [sort, setSort] = useState<SortKey>("relevance");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const allApps = useMemo(
-    () =>
-      [...new Set(products.flatMap((p) => p.applicationTags))].sort(),
+    () => [...new Set(products.flatMap((p) => p.applicationTags))].sort(),
     [products]
   );
 
@@ -96,116 +108,117 @@ export function CatalogueExplorer({ products }: { products: Product[] }) {
     const pressOf = (p: Product) => p.specs.maxPressureBar ?? 0;
     if (sort === "flow-asc") out = [...out].sort((a, b) => flowOf(a) - flowOf(b));
     if (sort === "flow-desc") out = [...out].sort((a, b) => flowOf(b) - flowOf(a));
-    if (sort === "pressure-desc")
-      out = [...out].sort((a, b) => pressOf(b) - pressOf(a));
+    if (sort === "pressure-desc") out = [...out].sort((a, b) => pressOf(b) - pressOf(a));
     return out;
   }, [products, cats, flowIdx, pressureIdx, apps, atexOnly, wifiOnly, sort]);
 
   const appLabel = (t: string) =>
     t.split("-").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
 
-  const hasFilters =
-    cats.size || apps.size || flowIdx !== null || pressureIdx !== null || atexOnly || wifiOnly;
+  const activeCount =
+    cats.size + apps.size + (flowIdx !== null ? 1 : 0) + (pressureIdx !== null ? 1 : 0) + (atexOnly ? 1 : 0) + (wifiOnly ? 1 : 0);
+
+  function clearAll() {
+    setCats(new Set());
+    setApps(new Set());
+    setFlowIdx(null);
+    setPressureIdx(null);
+    setAtexOnly(false);
+    setWifiOnly(false);
+  }
+
+  const filterBody = (
+    <>
+      <FilterGroup title="Category">
+        {CATEGORY_OPTIONS.map((c) => (
+          <CheckRow key={c.value} checked={cats.has(c.value)} onChange={() => toggle(cats, setCats, c.value)} label={c.label} />
+        ))}
+      </FilterGroup>
+
+      <FilterGroup title="Flow rate">
+        {FLOW_RANGES.map((r, i) => (
+          <label key={r.label} className="flex cursor-pointer items-center gap-2 py-1.5 text-sm text-text-muted hover:text-text">
+            <input
+              type="radio"
+              name="flow"
+              checked={flowIdx === i}
+              onChange={() => setFlowIdx(i)}
+              onClick={() => flowIdx === i && setFlowIdx(null)}
+              className="h-4 w-4 accent-[var(--color-accent)]"
+            />
+            {r.label}
+          </label>
+        ))}
+      </FilterGroup>
+
+      <FilterGroup title="Max pressure">
+        {PRESSURE_RANGES.map((r, i) => (
+          <label key={r.label} className="flex cursor-pointer items-center gap-2 py-1.5 text-sm text-text-muted hover:text-text">
+            <input
+              type="radio"
+              name="pressure"
+              checked={pressureIdx === i}
+              onChange={() => setPressureIdx(i)}
+              onClick={() => pressureIdx === i && setPressureIdx(null)}
+              className="h-4 w-4 accent-[var(--color-accent)]"
+            />
+            {r.label}
+          </label>
+        ))}
+      </FilterGroup>
+
+      <FilterGroup title="Application">
+        <div className="max-h-56 overflow-y-auto pr-1">
+          {allApps.map((t) => (
+            <CheckRow key={t} checked={apps.has(t)} onChange={() => toggle(apps, setApps, t)} label={appLabel(t)} />
+          ))}
+        </div>
+      </FilterGroup>
+
+      <FilterGroup title="Features">
+        <CheckRow checked={atexOnly} onChange={() => setAtexOnly(!atexOnly)} label="ATEX certified" />
+        <CheckRow checked={wifiOnly} onChange={() => setWifiOnly(!wifiOnly)} label="IoT / Wi-Fi" />
+      </FilterGroup>
+    </>
+  );
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
-      <aside className="space-y-6">
-        <div className="flex items-center justify-between">
+    <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block">
+        <div className="mb-2 flex items-center justify-between">
           <h2 className="text-sm font-bold uppercase tracking-wide text-text">Filters</h2>
-          {hasFilters ? (
-            <button
-              onClick={() => {
-                setCats(new Set());
-                setApps(new Set());
-                setFlowIdx(null);
-                setPressureIdx(null);
-                setAtexOnly(false);
-                setWifiOnly(false);
-              }}
-              className="text-xs font-medium text-accent hover:underline"
-            >
+          {activeCount > 0 && (
+            <button onClick={clearAll} className="text-xs font-medium text-accent hover:underline">
               Clear all
             </button>
-          ) : null}
+          )}
         </div>
-
-        <FilterGroup title="Category">
-          {CATEGORY_OPTIONS.map((c) => (
-            <CheckRow
-              key={c.value}
-              checked={cats.has(c.value)}
-              onChange={() => toggle(cats, setCats, c.value)}
-              label={c.label}
-            />
-          ))}
-        </FilterGroup>
-
-        <FilterGroup title="Flow rate">
-          {FLOW_RANGES.map((r, i) => (
-            <label
-              key={r.label}
-              className="flex cursor-pointer items-center gap-2 py-1 text-sm text-text-muted hover:text-text"
-            >
-              <input
-                type="radio"
-                name="flow"
-                checked={flowIdx === i}
-                onChange={() => setFlowIdx(flowIdx === i ? null : i)}
-                onClick={() => flowIdx === i && setFlowIdx(null)}
-                className="h-4 w-4 accent-[var(--color-accent)]"
-              />
-              {r.label}
-            </label>
-          ))}
-        </FilterGroup>
-
-        <FilterGroup title="Max pressure">
-          {PRESSURE_RANGES.map((r, i) => (
-            <label
-              key={r.label}
-              className="flex cursor-pointer items-center gap-2 py-1 text-sm text-text-muted hover:text-text"
-            >
-              <input
-                type="radio"
-                name="pressure"
-                checked={pressureIdx === i}
-                onChange={() => setPressureIdx(pressureIdx === i ? null : i)}
-                onClick={() => pressureIdx === i && setPressureIdx(null)}
-                className="h-4 w-4 accent-[var(--color-accent)]"
-              />
-              {r.label}
-            </label>
-          ))}
-        </FilterGroup>
-
-        <FilterGroup title="Application">
-          <div className="max-h-56 overflow-y-auto pr-1">
-            {allApps.map((t) => (
-              <CheckRow
-                key={t}
-                checked={apps.has(t)}
-                onChange={() => toggle(apps, setApps, t)}
-                label={appLabel(t)}
-              />
-            ))}
-          </div>
-        </FilterGroup>
-
-        <FilterGroup title="Features">
-          <CheckRow checked={atexOnly} onChange={() => setAtexOnly(!atexOnly)} label="ATEX certified" />
-          <CheckRow checked={wifiOnly} onChange={() => setWifiOnly(!wifiOnly)} label="IoT / Wi-Fi" />
-        </FilterGroup>
+        <div className="space-y-4">{filterBody}</div>
       </aside>
 
       <div>
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm text-text-muted">
+        {/* Toolbar: mobile Filters button + sort */}
+        <div className="mb-4 flex items-center gap-3">
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold text-text lg:hidden"
+          >
+            <Icon name="sliders-horizontal" size={16} />
+            Filters
+            {activeCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold text-white">
+                {activeCount}
+              </span>
+            )}
+          </button>
+          <p className="hidden text-sm text-text-muted sm:block">
             {filtered.length} product{filtered.length === 1 ? "" : "s"}
           </p>
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary-light"
+            className="ml-auto rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary-light"
           >
             <option value="relevance">Sort: Featured</option>
             <option value="flow-desc">Flow: High → Low</option>
@@ -213,19 +226,44 @@ export function CatalogueExplorer({ products }: { products: Product[] }) {
             <option value="pressure-desc">Pressure: High → Low</option>
           </select>
         </div>
+
+        <p className="mb-3 text-sm text-text-muted sm:hidden">
+          {filtered.length} product{filtered.length === 1 ? "" : "s"}
+        </p>
+
         <ProductGrid products={filtered} />
       </div>
-    </div>
-  );
-}
 
-function FilterGroup({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border border-border bg-surface p-4">
-      <h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-text-muted">
-        {title}
-      </h3>
-      {children}
+      {/* Mobile filter drawer */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setDrawerOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-surface shadow-xl">
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
+              <h2 className="text-base font-bold text-text">Filters</h2>
+              <div className="flex items-center gap-3">
+                {activeCount > 0 && (
+                  <button onClick={clearAll} className="text-sm font-medium text-accent">
+                    Clear
+                  </button>
+                )}
+                <button onClick={() => setDrawerOpen(false)} aria-label="Close filters" className="text-text-muted hover:text-text">
+                  <Icon name="x" size={22} />
+                </button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto px-4">{filterBody}</div>
+            <div className="border-t border-border p-4">
+              <button
+                onClick={() => setDrawerOpen(false)}
+                className="w-full rounded-lg bg-accent py-3 font-semibold text-white hover:brightness-110"
+              >
+                Show {filtered.length} product{filtered.length === 1 ? "" : "s"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
