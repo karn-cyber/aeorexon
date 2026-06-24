@@ -14,8 +14,8 @@ export interface ProductModel {
   maxPressureBar?: number;
   /** Max flow for this hydraulic, in l/h. */
   maxFlowLH?: number;
-  /** Stroke frequency, strokes/min. */
-  freqStrMin?: number;
+  /** Stroke frequency, strokes/min. May be a range string e.g. "43–131". */
+  freqStrMin?: number | string;
   /** Free-form extra columns (pressure/flow ranges, motor kW, weight, etc.). */
   [key: string]: string | number | undefined;
 }
