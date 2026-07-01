@@ -39,6 +39,26 @@ export const intentMap: Record<string, string[]> = {
   "nickel plating": ["electroplating"],
   coagulant: ["water-treatment", "wastewater"],
   flocculant: ["wastewater", "peristaltic"],
+  // Furniture / seating (Lynchpin)
+  chair: ["furniture", "seating"],
+  chairs: ["furniture", "seating"],
+  seating: ["furniture", "seating"],
+  seat: ["furniture", "seating"],
+  furniture: ["furniture", "seating"],
+  stool: ["furniture", "seating"],
+  "cafe chair": ["furniture", "cafe"],
+  "café chair": ["furniture", "cafe"],
+  cafe: ["furniture", "cafe"],
+  bistro: ["furniture", "cafe"],
+  "dining chair": ["furniture", "dining"],
+  dining: ["furniture", "dining"],
+  restaurant: ["furniture", "cafe", "dining"],
+  "office chair": ["furniture", "seating"],
+  office: ["furniture", "seating"],
+  lynchpin: ["furniture", "seating"],
+  // Bearings (URB)
+  bearing: ["bearings"],
+  bearings: ["bearings"],
 };
 
 export interface NumericIntent {
