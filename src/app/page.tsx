@@ -126,17 +126,17 @@ export default async function Home() {
 
           {/* Compact photo collage of what we do */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="relative col-span-2 h-36 overflow-hidden rounded-2xl sm:h-44">
-              <Image src="/hero/dosing-pump.jpg" alt="SEKO dosing pump" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" priority />
-              <span className="absolute bottom-2.5 left-2.5 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">Dosing pumps</span>
+            <div className="relative col-span-2 h-44 overflow-hidden rounded-2xl sm:h-56">
+              <Image src="/partners/lynchpin/cafe-1.jpg" alt="Café & dining seating" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" priority />
+              <span className="absolute bottom-2.5 left-2.5 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">Seating</span>
+            </div>
+            <div className="relative h-28 overflow-hidden rounded-xl sm:h-32">
+              <Image src="/hero/dosing-pump.jpg" alt="SEKO dosing pump" fill sizes="22vw" className="object-cover" />
+              <span className="absolute bottom-2 left-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">Dosing pumps</span>
             </div>
             <div className="relative h-28 overflow-hidden rounded-xl sm:h-32">
               <Image src="/hero/controller.jpg" alt="Water quality controller" fill sizes="22vw" className="object-cover" />
               <span className="absolute bottom-2 left-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">Controllers</span>
-            </div>
-            <div className="relative h-28 overflow-hidden rounded-xl sm:h-32">
-              <Image src="/partners/lynchpin/cafe-1.jpg" alt="Café & dining seating" fill sizes="22vw" className="object-cover" />
-              <span className="absolute bottom-2 left-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">Seating</span>
             </div>
           </div>
         </div>
