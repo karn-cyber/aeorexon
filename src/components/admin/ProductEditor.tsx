@@ -4,16 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Product, ProductImage, CategorySlug } from "@/lib/types";
+import { PRODUCT_CATEGORIES as CATEGORIES } from "@/lib/productCategories";
 import { Icon } from "@/components/Icon";
-
-const CATEGORIES: { value: CategorySlug; label: string }[] = [
-  { value: "solenoid-wall", label: "Solenoid · Wall" },
-  { value: "solenoid-base", label: "Solenoid · Base" },
-  { value: "motor-driven", label: "Motor-Driven" },
-  { value: "peristaltic", label: "Peristaltic" },
-  { value: "controllers", label: "Controllers" },
-  { value: "accessories", label: "Accessories" },
-];
 
 const MAX_IMAGE_BYTES = 1_500_000; // ~1.5MB per image (stored as data URL in Mongo)
 

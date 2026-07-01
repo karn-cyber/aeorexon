@@ -150,14 +150,14 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
                 />
               ) : null}
               <Link
-                href="/rfq"
-                className={`block w-full rounded-lg py-3 text-center font-semibold ${
+                href={`/chat/new?slug=${encodeURIComponent(product.slug)}&name=${encodeURIComponent(product.name)}`}
+                className={`flex w-full items-center justify-center gap-2 rounded-lg py-3 text-center font-semibold ${
                   priceInfo.hasPrice
                     ? "border border-primary text-primary hover:bg-primary hover:text-white"
                     : "bg-accent text-white hover:brightness-110"
                 }`}
               >
-                Request a Quote
+                <Icon name="handshake" size={18} /> Request a Quote — Chat
               </Link>
             </div>
             <div className="mt-4 border-t border-border pt-4">

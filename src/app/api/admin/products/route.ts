@@ -7,15 +7,9 @@ import {
   getProductBySlug,
 } from "@/lib/products";
 import type { Product, CategorySlug } from "@/lib/types";
+import { PRODUCT_CATEGORIES } from "@/lib/productCategories";
 
-const CATEGORIES: CategorySlug[] = [
-  "solenoid-wall",
-  "solenoid-base",
-  "motor-driven",
-  "peristaltic",
-  "controllers",
-  "accessories",
-];
+const CATEGORIES: CategorySlug[] = PRODUCT_CATEGORIES.map((c) => c.value);
 
 function slugify(s: string): string {
   return s

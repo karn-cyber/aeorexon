@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/lib/types";
 import { formatINR, getPriceInfo } from "@/lib/pricing";
+import { PRODUCT_CATEGORIES, categoryLabel } from "@/lib/productCategories";
 import { Icon } from "@/components/Icon";
 
 interface Row {
@@ -34,6 +35,7 @@ export function AdminProductsTable({ products }: { products: Product[] }) {
   const [draft, setDraft] = useState<Partial<Row>>({});
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState("");
+  const [cat, setCat] = useState<string>("all");
 
   function startEdit(r: Row) {
     setEditing(r.slug);
@@ -90,12 +92,43 @@ export function AdminProductsTable({ products }: { products: Product[] }) {
     }
   }
 
-  const visible = rows.filter(
-    (r) => r.name.toLowerCase().includes(filter.toLowerCase()) || r.slug.includes(filter.toLowerCase())
-  );
+  const visible = rows.filter((r) => {
+    if (cat !== "all" && r.category !== cat) return false;
+    const f = filter.toLowerCase();
+    return r.name.toLowerCase().includes(f) || r.slug.includes(f);
+  });
+
+  // Category tabs with live counts (only categories that have products, + All).
+  const counts = rows.reduce<Record<string, number>>((acc, r) => {
+    acc[r.category] = (acc[r.category] ?? 0) + 1;
+    return acc;
+  }, {});
+  const catTabs = [
+    { value: "all", label: "All", n: rows.length },
+    ...PRODUCT_CATEGORIES.filter((c) => counts[c.value]).map((c) => ({
+      value: c.value as string,
+      label: c.label,
+      n: counts[c.value],
+    })),
+  ];
 
   return (
     <div>
+      <div className="mb-4 flex flex-wrap gap-2">
+        {catTabs.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => setCat(t.value)}
+            className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+              cat === t.value
+                ? "bg-primary text-white"
+                : "border border-border bg-surface text-text-muted hover:border-primary-light"
+            }`}
+          >
+            {t.label} <span className="opacity-70">({t.n})</span>
+          </button>
+        ))}
+      </div>
       <input
         placeholder="Filter products…"
         value={filter}
@@ -124,7 +157,7 @@ export function AdminProductsTable({ products }: { products: Product[] }) {
                     <Link href={`/products/${r.slug}`} className="font-medium text-text hover:text-primary">
                       {r.name}
                     </Link>
-                    <div className="text-xs text-text-muted">{r.category}</div>
+                    <div className="text-xs text-text-muted">{categoryLabel(r.category)}</div>
                   </td>
                   <td className="px-4 py-3">
                     {isEdit ? (

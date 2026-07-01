@@ -6,7 +6,9 @@ export type CategorySlug =
   | "motor-driven"
   | "peristaltic"
   | "controllers"
-  | "accessories";
+  | "accessories"
+  | "furniture"
+  | "bearings";
 
 export interface ProductModel {
   code: string;

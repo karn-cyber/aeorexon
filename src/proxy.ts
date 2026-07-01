@@ -3,7 +3,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 // Routes that require a signed-in user. Admin-role enforcement (email in the
 // MongoDB admins list) happens in the /admin layout, since the Mongo driver
 // can't run in the edge middleware runtime.
-const isProtected = createRouteMatcher(["/admin(.*)", "/account(.*)"]);
+const isProtected = createRouteMatcher(["/admin(.*)", "/account(.*)", "/chat(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtected(req)) {

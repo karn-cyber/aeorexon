@@ -52,6 +52,11 @@ export async function Navbar() {
 
           {/* Always-visible actions (right) */}
           <div className="ml-auto flex items-center gap-3 lg:ml-0">
+            {signedIn && (
+              <Link href="/chat" className="text-text-muted hover:text-primary" aria-label="Messages" title="Messages">
+                <Icon name="handshake" size={22} />
+              </Link>
+            )}
             <CartLink />
             {signedIn ? (
               <UserButton />
