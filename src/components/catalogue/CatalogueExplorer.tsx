@@ -12,6 +12,8 @@ const CATEGORY_OPTIONS: { value: CategorySlug; label: string }[] = [
   { value: "peristaltic", label: "Peristaltic" },
   { value: "controllers", label: "Controllers" },
   { value: "accessories", label: "Accessories" },
+  { value: "furniture", label: "Furniture & Seating" },
+  { value: "bearings", label: "Bearings" },
 ];
 
 const FLOW_RANGES = [
