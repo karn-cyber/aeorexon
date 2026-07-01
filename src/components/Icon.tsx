@@ -43,6 +43,14 @@ import {
   Save,
   Menu,
   SlidersHorizontal,
+  Armchair,
+  CircleDot,
+  Waypoints,
+  Handshake,
+  ExternalLink,
+  MapPin,
+  Building2,
+  ArrowRight,
   type LucideIcon,
 } from "lucide-react";
 
@@ -96,6 +104,14 @@ const ICONS: Record<string, LucideIcon> = {
   save: Save,
   menu: Menu,
   "sliders-horizontal": SlidersHorizontal,
+  armchair: Armchair,
+  "circle-dot": CircleDot,
+  waypoints: Waypoints,
+  handshake: Handshake,
+  "external-link": ExternalLink,
+  "map-pin": MapPin,
+  "building-2": Building2,
+  "arrow-right": ArrowRight,
 };
 
 export type IconName = keyof typeof ICONS;

@@ -42,11 +42,13 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="mb-3 text-sm font-semibold text-white">Get help</h3>
+          <h3 className="mb-3 text-sm font-semibold text-white">Areas of work</h3>
           <ul className="space-y-2 text-sm">
+            <li><Link href="/solutions" className="hover:text-white">All areas of work</Link></li>
+            <li><Link href="/solutions/png-gas-pipeline" className="hover:text-white">PNG Gas Pipelines</Link></li>
+            <li><Link href="/solutions/urb-bearings" className="hover:text-white">URB Bearings</Link></li>
+            <li><Link href="/solutions/lynchpin-seating" className="hover:text-white">Lynchpin Seating</Link></li>
             <li><Link href="/rfq" className="hover:text-white">Request a Quote</Link></li>
-            <li><Link href="/products" className="hover:text-white">Browse Catalogue</Link></li>
-            <li><Link href="/compare" className="hover:text-white">Compare Products</Link></li>
           </ul>
         </div>
       </div>

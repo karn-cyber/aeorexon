@@ -8,10 +8,10 @@ import { getCurrentUserInfo } from "@/lib/auth";
 
 const navLinks = [
   { href: "/products", label: "Catalogue" },
-  { href: "/categories/solenoid-wall", label: "Solenoid" },
   { href: "/categories/motor-driven", label: "Motor Pumps" },
   { href: "/categories/peristaltic", label: "Peristaltic" },
   { href: "/categories/controllers", label: "Controllers" },
+  { href: "/solutions", label: "Areas of Work" },
 ];
 
 export async function Navbar() {

@@ -3,6 +3,8 @@ import { SearchBar } from "@/components/layout/SearchBar";
 import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
 import { categories, useCases } from "@/data/categories";
+import { solutionAreas } from "@/data/solutions";
+import { SolutionCard } from "@/components/solutions/SolutionCard";
 import { getFeaturedProducts } from "@/lib/products";
 
 const USE_CASE_TILES = [
@@ -86,6 +88,26 @@ export default async function Home() {
                 <div className="mt-3 font-bold text-text group-hover:text-primary">{c.name}</div>
                 <div className="mt-1 text-sm text-text-muted">{c.short}</div>
               </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Areas of work */}
+        <section>
+          <div className="flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-text">Our areas of work</h2>
+              <p className="mt-1 text-text-muted">
+                Trusted partnerships beyond dosing — gas, bearings and seating.
+              </p>
+            </div>
+            <Link href="/solutions" className="hidden text-sm font-semibold text-accent hover:underline sm:inline">
+              View all →
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {solutionAreas.map((area) => (
+              <SolutionCard key={area.slug} area={area} />
             ))}
           </div>
         </section>
