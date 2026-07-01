@@ -125,18 +125,14 @@ export default async function Home() {
           </div>
 
           {/* Photo collage of what we do */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="relative row-span-2 overflow-hidden rounded-2xl">
-              <Image src="/partners/lynchpin/dining-2.jpg" alt="Café & dining seating" width={520} height={720} className="h-full w-full object-cover" priority />
-              <span className="absolute bottom-3 left-3 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur">Seating</span>
+          <div className="grid gap-3 sm:gap-4">
+            <div className="relative aspect-[3/2] overflow-hidden rounded-2xl">
+              <Image src="/hero/dosing-pump.jpg" alt="SEKO dosing pump" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" priority />
+              <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold text-white backdrop-blur">Dosing pumps</span>
             </div>
-            <div className="relative overflow-hidden rounded-2xl border border-border bg-slate-100">
-              <Image src="/products/product-images/solenoid-wall/tekna-akl/tekna-akl.jpg" alt="Dosing pump" width={320} height={240} className="h-40 w-full object-contain p-4" />
-              <span className="absolute bottom-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Dosing pumps</span>
-            </div>
-            <div className="relative overflow-hidden rounded-2xl border border-border bg-slate-100">
-              <Image src="/products/product-images/controllers/kontrol-40/kontrol-40.jpg" alt="Controller" width={320} height={240} className="h-40 w-full object-contain p-4" />
-              <span className="absolute bottom-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Controllers</span>
+            <div className="relative aspect-[3/2] overflow-hidden rounded-2xl">
+              <Image src="/hero/controller.jpg" alt="Water quality controller" fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+              <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold text-white backdrop-blur">Controllers</span>
             </div>
           </div>
         </div>
