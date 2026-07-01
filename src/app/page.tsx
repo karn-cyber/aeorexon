@@ -1,148 +1,216 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SearchBar } from "@/components/layout/SearchBar";
 import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
-import { categories, useCases } from "@/data/categories";
-import { solutionAreas } from "@/data/solutions";
-import { SolutionCard } from "@/components/solutions/SolutionCard";
+import { FurnitureStrip } from "@/components/home/FurnitureStrip";
+import { categories } from "@/data/categories";
 import { getFeaturedProducts } from "@/lib/products";
 
-const USE_CASE_TILES = [
-  "water-treatment",
-  "swimming-pool",
-  "boiler-feed",
-  "electroplating",
-  "solar-offgrid",
-  "iot-remote",
+// Amazon-style "pick a department" tiles — photo where we have it, otherwise a
+// clean graphic tile. Never a stopper: the page keeps going below.
+type Tile = {
+  label: string;
+  sub: string;
+  href: string;
+  icon: string;
+} & (
+  | { kind: "cover"; img: string }
+  | { kind: "product"; img: string }
+  | { kind: "graphic" }
+);
+
+const departments: Tile[] = [
+  {
+    label: "Dosing Pumps",
+    sub: "SEKO / Water & Industry",
+    href: "/products",
+    icon: "droplets",
+    kind: "product",
+    img: "/products/product-images/_overview/solenoid-pump-group.jpg",
+  },
+  {
+    label: "Café & Dining Seating",
+    sub: "Lynchpin",
+    href: "/solutions/lynchpin-seating",
+    icon: "armchair",
+    kind: "cover",
+    img: "/partners/lynchpin/cafe-1.jpg",
+  },
+  {
+    label: "PNG Gas Pipelines",
+    sub: "Chaze Engineering",
+    href: "/solutions/png-gas-pipeline",
+    icon: "waypoints",
+    kind: "graphic",
+  },
+  {
+    label: "URB Bearings",
+    sub: "URB Group, Romania",
+    href: "/solutions/urb-bearings",
+    icon: "circle-dot",
+    kind: "graphic",
+  },
 ];
+
+function DepartmentTile({ t }: { t: Tile }) {
+  return (
+    <Link
+      href={t.href}
+      className="group relative flex h-52 flex-col justify-end overflow-hidden rounded-2xl border border-border sm:h-60"
+    >
+      {t.kind === "cover" && (
+        <>
+          <Image src={t.img} alt={t.label} fill sizes="(max-width:640px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+        </>
+      )}
+      {t.kind === "product" && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200" />
+          <Image src={t.img} alt={t.label} fill sizes="(max-width:640px) 50vw, 25vw" className="object-contain p-6 transition duration-500 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
+        </>
+      )}
+      {t.kind === "graphic" && (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-light">
+          <Icon name={t.icon} size={64} strokeWidth={1.25} className="absolute right-4 top-4 text-white/25" />
+        </div>
+      )}
+      <div className="relative p-4 text-white">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-white/75">
+          <Icon name={t.icon} size={14} /> {t.sub}
+        </div>
+        <div className="mt-1 text-lg font-bold leading-tight">{t.label}</div>
+        <div className="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-accent-light">
+          Shop <Icon name="arrow-right" size={14} />
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default async function Home() {
   const featured = await getFeaturedProducts();
-  const tiles = useCases.filter((u) => USE_CASE_TILES.includes(u.slug));
 
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-primary text-white">
-        <div className="mx-auto max-w-4xl px-4 py-20 text-center">
-          <h1 className="text-4xl font-extrabold sm:text-5xl">
-            Industrial Equipment, <span className="text-accent">Ordered Intelligently</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
-            Dosing pumps, controllers and accessories from SEKO / Water &amp; Industry —
-            matched to your use case, with full specs and no phone calls.
-          </p>
-          <div className="mx-auto mt-8 max-w-2xl">
-            <SearchBar large />
+      {/* Hero — minimal, product-first, shows what we do */}
+      <section className="border-b border-border bg-surface">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 lg:grid-cols-2 lg:py-16">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent">
+              Dosing systems · Gas pipelines · Bearings · Seating
+            </p>
+            <h1 className="mt-3 text-4xl font-extrabold leading-tight text-text sm:text-5xl">
+              One supplier for what your{" "}
+              <span className="text-primary">site</span> and{" "}
+              <span className="text-primary">space</span> need.
+            </h1>
+            <p className="mt-4 max-w-xl text-lg text-text-muted">
+              Browse dosing pumps and controllers, request gas-pipeline and bearing
+              supply, and fit out cafés with Lynchpin seating — all in one place.
+            </p>
+            <div className="mt-6 max-w-xl">
+              <SearchBar large />
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="/products" className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110">
+                <Icon name="shopping-cart" size={18} /> Browse products
+              </Link>
+              <Link href="/solutions" className="rounded-lg border border-border px-6 py-3 font-semibold text-text hover:border-primary-light">
+                Our areas of work
+              </Link>
+            </div>
           </div>
-          <div className="mt-6 flex justify-center gap-3">
-            <Link
-              href="/products"
-              className="rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110"
-            >
-              Browse Catalogue
-            </Link>
-            <Link
-              href="/rfq"
-              className="rounded-lg border border-white/30 px-6 py-3 font-semibold text-white hover:bg-white/10"
-            >
-              Request a Quote
-            </Link>
+
+          {/* Photo collage of what we do */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="relative row-span-2 overflow-hidden rounded-2xl">
+              <Image src="/partners/lynchpin/dining-2.jpg" alt="Café & dining seating" width={520} height={720} className="h-full w-full object-cover" priority />
+              <span className="absolute bottom-3 left-3 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur">Seating</span>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-slate-100">
+              <Image src="/products/product-images/solenoid-wall/tekna-akl/tekna-akl.jpg" alt="Dosing pump" width={320} height={240} className="h-40 w-full object-contain p-4" />
+              <span className="absolute bottom-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Dosing pumps</span>
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-slate-100">
+              <Image src="/products/product-images/controllers/kontrol-40/kontrol-40.jpg" alt="Controller" width={320} height={240} className="h-40 w-full object-contain p-4" />
+              <span className="absolute bottom-3 left-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">Controllers</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-16">
-        {/* Shop by use case */}
-        <section>
-          <h2 className="text-2xl font-bold text-text">Shop by use case</h2>
-          <p className="mt-1 text-text-muted">Tell us the job — we’ll point you to the right pump.</p>
-          <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3">
-            {tiles.map((u) => (
-              <Link
-                key={u.slug}
-                href={`/use-cases/${u.slug}`}
-                className="group rounded-xl border border-border bg-surface p-5 transition hover:border-primary-light hover:shadow-md"
-              >
-                <Icon name={u.icon} size={32} strokeWidth={1.75} className="text-accent" />
-                <div className="mt-3 font-bold text-text group-hover:text-primary">
-                  {u.title.replace(/^Dosing (Pumps )?for /i, "").replace(/^Chemical Dosing for /i, "")}
-                </div>
-                <div className="mt-1 line-clamp-2 text-sm text-text-muted">{u.intro}</div>
-              </Link>
-            ))}
-          </div>
-        </section>
+      {/* Department selector */}
+      <section className="mx-auto max-w-7xl px-4 py-12">
+        <div className="flex items-end justify-between">
+          <h2 className="text-2xl font-bold text-text">What are you looking for?</h2>
+          <Link href="/solutions" className="hidden text-sm font-semibold text-accent hover:underline sm:inline">
+            See all →
+          </Link>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {departments.map((t) => (
+            <DepartmentTile key={t.label} t={t} />
+          ))}
+        </div>
+      </section>
 
-        {/* Shop by category */}
-        <section>
-          <h2 className="text-2xl font-bold text-text">Shop by category</h2>
-          <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
-            {categories.map((c) => (
-              <Link
-                key={c.slug}
-                href={`/categories/${c.slug}`}
-                className="group flex w-56 shrink-0 flex-col rounded-xl border border-border bg-surface p-5 transition hover:border-primary-light hover:shadow-md"
-              >
-                <Icon name={c.icon} size={32} strokeWidth={1.75} className="text-primary" />
-                <div className="mt-3 font-bold text-text group-hover:text-primary">{c.name}</div>
-                <div className="mt-1 text-sm text-text-muted">{c.short}</div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Areas of work */}
-        <section>
-          <div className="flex items-end justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-text">Our areas of work</h2>
-              <p className="mt-1 text-text-muted">
-                Trusted partnerships beyond dosing — gas, bearings and seating.
-              </p>
-            </div>
-            <Link href="/solutions" className="hidden text-sm font-semibold text-accent hover:underline sm:inline">
+      {/* Featured products (products-first) */}
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-14">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-text">Featured products</h2>
+            <Link href="/products" className="text-sm font-semibold text-accent hover:underline">
               View all →
             </Link>
           </div>
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {solutionAreas.map((area) => (
-              <SolutionCard key={area.slug} area={area} />
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {featured.map((p) => (
+              <ProductCard key={p.slug} product={p} />
             ))}
           </div>
         </section>
+      )}
 
-        {/* Why Aorexon */}
-        <section className="grid gap-6 rounded-2xl bg-surface p-8 sm:grid-cols-3">
+      {/* Dynamic furniture strip */}
+      <FurnitureStrip />
+
+      {/* Shop pumps by category */}
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <h2 className="text-2xl font-bold text-text">Shop dosing equipment by category</h2>
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+          {categories.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/categories/${c.slug}`}
+              className="group flex flex-col items-center rounded-xl border border-border bg-surface p-5 text-center transition hover:border-primary-light hover:shadow-md"
+            >
+              <Icon name={c.icon} size={30} strokeWidth={1.75} className="text-primary" />
+              <div className="mt-3 text-sm font-semibold text-text group-hover:text-primary">
+                {c.name.replace(/ \(.*\)/, "")}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Why Aorexon */}
+      <section className="mx-auto max-w-7xl px-4 pb-16">
+        <div className="grid gap-6 rounded-2xl bg-surface p-8 sm:grid-cols-3">
           {[
-            { t: "Use-case matched", d: "Every product leads with what it’s for — not just a spec sheet." },
-            { t: "Full specs, no calls", d: "Browse the entire catalogue, models and datasheets without logging in." },
-            { t: "Order direct or get a quote", d: "Buy standard stock items, or request a quote for custom and large orders." },
+            { t: "Use-case matched", d: "Products lead with what they’re for — not just a spec sheet." },
+            { t: "Full specs, no calls", d: "Browse the whole catalogue and datasheets without logging in." },
+            { t: "Buy direct or get a quote", d: "Order stock items online, or request a quote for projects." },
           ].map((b) => (
             <div key={b.t}>
               <h3 className="font-bold text-primary">{b.t}</h3>
               <p className="mt-1 text-sm text-text-muted">{b.d}</p>
             </div>
           ))}
-        </section>
-
-        {/* Featured products */}
-        {featured.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-text">Featured products</h2>
-              <Link href="/products" className="text-sm font-semibold text-accent hover:underline">
-                View all →
-              </Link>
-            </div>
-            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {featured.map((p) => (
-                <ProductCard key={p.slug} product={p} />
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
