@@ -7,10 +7,8 @@ import { CartLink } from "@/components/cart/CartLink";
 import { getCurrentUserInfo } from "@/lib/auth";
 
 const navLinks = [
-  { href: "/products", label: "Catalogue" },
-  { href: "/categories/motor-driven", label: "Motor Pumps" },
-  { href: "/categories/peristaltic", label: "Peristaltic" },
-  { href: "/categories/controllers", label: "Controllers" },
+  { href: "/products", label: "Dosing Pumps" },
+  { href: "/solutions/lynchpin-seating", label: "Seating" },
   { href: "/solutions", label: "Areas of Work" },
 ];
 
