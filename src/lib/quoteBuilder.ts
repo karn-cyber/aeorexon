@@ -4,8 +4,15 @@ import { formatINR } from "@/lib/pricing";
 export interface QuoteSettings {
   /** Commission / markup the reseller adds on top of the base (channel) price. */
   markupPct: number;
-  /** Discount to *show* the customer (a higher list price is back-computed). */
+  /** Discount percentage applied (see discountMode). */
   discountPct: number;
+  /**
+   * "shown"  — cosmetic: a higher list price is back-computed so the discount
+   *            nets exactly to the marked-up price (customer pays the markup).
+   * "real"   — genuine: the marked-up price IS the list price and the discount
+   *            actually reduces what the customer pays.
+   */
+  discountMode: "shown" | "real";
   gstPct: number;
   includeGst: boolean;
   roundTo: number;
@@ -40,10 +47,22 @@ export function computeLine(
   s: QuoteSettings
 ): QuoteLine {
   const markup = item.markupOverride ?? s.markupPct;
-  const net0 = item.base * (1 + markup / 100);
-  const net = roundTo(net0, s.roundTo);
-  const listPrice =
-    s.discountPct > 0 ? roundTo(net / (1 - s.discountPct / 100), s.roundTo) : net;
+  const marked = roundTo(item.base * (1 + markup / 100), s.roundTo);
+
+  let net = marked;
+  let listPrice = marked;
+  if (s.discountPct > 0) {
+    if (s.discountMode === "real") {
+      // Genuine reduction: list is the marked price, customer pays less.
+      listPrice = marked;
+      net = roundTo(marked * (1 - s.discountPct / 100), s.roundTo);
+    } else {
+      // Cosmetic: inflate the list so the discount nets to the marked price.
+      net = marked;
+      listPrice = roundTo(marked / (1 - s.discountPct / 100), s.roundTo);
+    }
+  }
+
   const gstAmount = s.includeGst ? roundTo((net * s.gstPct) / 100, 1) : 0;
   const unitTotal = net + gstAmount;
   const qty = Math.max(1, item.qty ?? 1);

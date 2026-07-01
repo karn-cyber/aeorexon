@@ -15,6 +15,7 @@ import { Icon } from "@/components/Icon";
 export function QuoteBuilder({ items, groups }: { items: PriceItem[]; groups: string[] }) {
   const [markupPct, setMarkupPct] = useState(20);
   const [discountPct, setDiscountPct] = useState(0);
+  const [discountMode, setDiscountMode] = useState<"shown" | "real">("shown");
   const [gstPct, setGstPct] = useState(18);
   const [includeGst, setIncludeGst] = useState(false);
   const [withQty, setWithQty] = useState(false);
@@ -24,7 +25,7 @@ export function QuoteBuilder({ items, groups }: { items: PriceItem[]; groups: st
   const [qty, setQty] = useState<Record<string, number>>({});
   const [copied, setCopied] = useState(false);
 
-  const settings: QuoteSettings = { markupPct, discountPct, gstPct, includeGst, roundTo: 1, withQty };
+  const settings: QuoteSettings = { markupPct, discountPct, discountMode, gstPct, includeGst, roundTo: 1, withQty };
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -115,10 +116,25 @@ export function QuoteBuilder({ items, groups }: { items: PriceItem[]; groups: st
               <input type="number" value={markupPct} onChange={(e) => setMarkupPct(Number(e.target.value) || 0)} className={numField} />
             </label>
             <label className="text-sm">
-              <span className="mb-1 block font-medium text-text-muted">Show discount %</span>
+              <span className="mb-1 block font-medium text-text-muted">Discount %</span>
               <input type="number" value={discountPct} onChange={(e) => setDiscountPct(Number(e.target.value) || 0)} className={numField} />
             </label>
           </div>
+          {discountPct > 0 && (
+            <div className="mt-3">
+              <span className="mb-1 block text-sm font-medium text-text-muted">Discount type</span>
+              <div className="flex flex-wrap gap-2 text-sm">
+                <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 ${discountMode === "shown" ? "border-accent bg-accent/5" : "border-border"}`}>
+                  <input type="radio" name="dmode" checked={discountMode === "shown"} onChange={() => setDiscountMode("shown")} className="accent-[var(--color-accent)]" />
+                  Shown only (price unchanged)
+                </label>
+                <label className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 ${discountMode === "real" ? "border-accent bg-accent/5" : "border-border"}`}>
+                  <input type="radio" name="dmode" checked={discountMode === "real"} onChange={() => setDiscountMode("real")} className="accent-[var(--color-accent)]" />
+                  Real (reduces price)
+                </label>
+              </div>
+            </div>
+          )}
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
             <label className="flex items-center gap-2">
               <input type="checkbox" checked={includeGst} onChange={(e) => setIncludeGst(e.target.checked)} className="h-4 w-4 accent-[var(--color-accent)]" />
