@@ -52,7 +52,7 @@ export default function LynchpinPage() {
               {total} designs · {cafeChairs.length} Café · {diningChairs.length} Dining
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/rfq" className="rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110">
+              <Link href="/chat/new?name=Caf%C3%A9%20%26%20Dining%20Seating%20(Lynchpin)" className="rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110">
                 Request a quote
               </Link>
               <a href="tel:9011023081" className="inline-flex items-center gap-2 rounded-lg border border-white/40 px-6 py-3 font-semibold text-white hover:bg-white/10">

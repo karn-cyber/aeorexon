@@ -67,7 +67,7 @@ export async function Navbar() {
               </SignInButton>
             )}
             <Link
-              href="/rfq"
+              href="/chat/new?name=Quote%20request"
               className="hidden rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 lg:inline-block"
             >
               Get a Quote

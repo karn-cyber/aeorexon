@@ -48,7 +48,7 @@ export function Footer() {
             <li><Link href="/solutions/png-gas-pipeline" className="hover:text-white">PNG Gas Pipelines</Link></li>
             <li><Link href="/solutions/urb-bearings" className="hover:text-white">URB Bearings</Link></li>
             <li><Link href="/solutions/lynchpin-seating" className="hover:text-white">Lynchpin Seating</Link></li>
-            <li><Link href="/rfq" className="hover:text-white">Request a Quote</Link></li>
+            <li><Link href="/chat/new?name=Quote%20request" className="hover:text-white">Request a Quote</Link></li>
           </ul>
         </div>
       </div>

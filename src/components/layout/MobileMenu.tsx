@@ -74,7 +74,7 @@ export function MobileMenu({
             </nav>
             <div className="border-t border-border p-4">
               <Link
-                href="/rfq"
+                href="/chat/new?name=Quote%20request"
                 onClick={() => setOpen(false)}
                 className="block w-full rounded-lg bg-accent py-3 text-center font-semibold text-white"
               >

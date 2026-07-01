@@ -78,10 +78,10 @@ export default async function SolutionDetailPage(
               <Icon name={area.cta.external ? "external-link" : "arrow-right"} size={16} />
             </a>
             <Link
-              href="/rfq"
+              href={`/chat/new?name=${encodeURIComponent(area.name)}`}
               className="mt-2 block w-full rounded-lg border border-primary py-3 text-center font-semibold text-primary hover:bg-primary hover:text-white"
             >
-              Request a Quote
+              Request a Quote — Chat
             </Link>
             <a
               href="tel:9011023081"

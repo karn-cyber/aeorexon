@@ -60,7 +60,7 @@ export const solutionAreas: SolutionArea[] = [
       "Pressure testing, leak checks & safety compliance",
       "Design, installation and commissioning",
     ],
-    cta: { label: "Enquire about a PNG installation", href: "/rfq" },
+    cta: { label: "Enquire about a PNG installation", href: "/chat/new?name=PNG%20Gas%20Pipeline%20Installation" },
     href: "/solutions/png-gas-pipeline",
   },
   {

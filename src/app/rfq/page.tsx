@@ -3,25 +3,28 @@ import { Icon } from "@/components/Icon";
 
 export const metadata = { title: "Request a Quote — Aorexon" };
 
-// Placeholder for the full RFQ flow (cart-style list, contact form, DB-backed
-// submission + email). The catalogue-core milestone links here; the interactive
-// flow lands in a later pass.
+// Quotes are handled via the built-in chat. This page routes users into it.
 export default function RfqPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
-      <Icon name="clipboard-list" size={56} strokeWidth={1.5} className="mx-auto text-accent" />
+      <Icon name="handshake" size={56} strokeWidth={1.5} className="mx-auto text-accent" />
       <h1 className="mt-4 text-3xl font-extrabold text-text">Request a Quote</h1>
       <p className="mt-3 text-text-muted">
-        The full quote flow — add products, set quantities, and submit for pricing —
-        is coming next. For now, tell us what you need and we’ll get back to you.
+        Chat directly with our team for pricing, availability and lead times. Sign in
+        (Google or email) to start a conversation — your messages go straight to us.
       </p>
-      <a
-        href="mailto:sales@aorexon.com?subject=Aorexon%20Quote%20Request"
+      <Link
+        href="/chat/new?name=Quote%20request"
         className="mt-8 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110"
       >
-        <Icon name="mail" size={18} /> Email us your requirement
-      </a>
+        <Icon name="handshake" size={18} /> Start a quote chat
+      </Link>
       <div className="mt-4">
+        <a href="tel:9011023081" className="text-sm font-medium text-text-muted hover:text-primary">
+          Or call 9011023081
+        </a>
+      </div>
+      <div className="mt-2">
         <Link href="/products" className="text-sm font-medium text-primary hover:underline">
           ← Back to catalogue
         </Link>

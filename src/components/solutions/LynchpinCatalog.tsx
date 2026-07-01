@@ -119,7 +119,10 @@ function Lightbox({
           <h3 className="text-2xl font-bold">{chair.name}</h3>
           <p className="text-sm text-white/60">Lynchpin · {index + 1} of {chairs.length}</p>
           <div className="mt-4 flex justify-center gap-3">
-            <Link href="/rfq" className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110">
+            <Link
+              href={`/chat/new?slug=lynchpin-${chair.slug}&name=${encodeURIComponent(chair.name)}`}
+              className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white hover:brightness-110"
+            >
               Request a quote
             </Link>
             <a href="tel:9011023081" className="inline-flex items-center gap-2 rounded-lg border border-white/30 px-5 py-2.5 text-sm font-semibold text-white hover:bg-white/10">
