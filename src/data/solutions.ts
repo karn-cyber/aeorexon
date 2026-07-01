@@ -111,73 +111,8 @@ export const solutionBySlug: Record<string, SolutionArea> = Object.fromEntries(
   solutionAreas.map((s) => [s.slug, s])
 );
 
-// ── Lynchpin seating collections (models from the Café & Dining catalogues) ──
-export const lynchpinCollections = {
-  cafe: {
-    title: "Café Series",
-    intro:
-      "Stackable, durable and colourful seating for cafés, bistros and quick-service spaces.",
-    heroImage: "/partners/lynchpin/cafe-1.jpg",
-    gallery: [
-      "/partners/lynchpin/cafe-3.jpg",
-      "/partners/lynchpin/cafe-4.jpg",
-      "/partners/lynchpin/cafe-5.jpg",
-      "/partners/lynchpin/cafe-6.jpg",
-    ],
-    models: [
-      "Melody (Ind / Imp / Rev.)",
-      "Toxy (Woody / Metal / Gold)",
-      "Lisbon (Cush / Woody Rev. / PP)",
-      "Bistro (Arms / Without Arms)",
-      "Cane (Arms / Without Arms)",
-      "Tolex (Wood / Vintage)",
-      "Sterling",
-      "Swift",
-      "Sweden (PP / Rev. / DLX Cush)",
-      "Zuri",
-      "Bonny (Woody / Gold)",
-      "Furry",
-      "Yuki",
-      "Trendy (PP / Cush)",
-      "Sweety",
-      "Tulip",
-      "Marvel (Cush)",
-      "Xena",
-      "Beckey",
-      "Delsey",
-    ],
-  },
-  dining: {
-    title: "Dining Series",
-    intro:
-      "Refined dining chair collections for restaurants, hospitality and premium home interiors.",
-    heroImage: "/partners/lynchpin/dining-2.jpg",
-    gallery: [
-      "/partners/lynchpin/dining-4.jpg",
-      "/partners/lynchpin/dining-5.jpg",
-      "/partners/lynchpin/dining-6.jpg",
-    ],
-    models: [
-      "Cloud",
-      "Oppe",
-      "Parcos",
-      "Kia",
-      "Cora",
-      "Sally",
-      "Thea",
-      "Phoenix",
-      "Berlin",
-      "Rico",
-      "Ila",
-      "Echo",
-      "Serenity",
-      "Mykonos",
-      "Iris",
-      "Iona",
-      "Ade",
-    ],
-  },
-};
+// Full Lynchpin café & dining chair data (every model + image) lives in
+// src/data/lynchpin.ts, generated from the catalogues.
 
 export const lynchpinContact = {
   brand: "Lynchpin",
