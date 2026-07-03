@@ -1,9 +1,12 @@
-import { priceList, priceGroups } from "@/data/priceList";
+import { getPriceList, priceGroupsOf } from "@/lib/priceListRepo";
 import { QuoteBuilder } from "@/components/admin/QuoteBuilder";
 
 export const metadata = { title: "Price List Builder — Admin" };
+export const dynamic = "force-dynamic";
 
-export default function PriceListPage() {
+export default async function PriceListPage() {
+  const items = await getPriceList();
+  const groups = priceGroupsOf(items);
   return (
     <div>
       <h1 className="text-3xl font-extrabold text-text">Price list / quote builder</h1>
@@ -11,7 +14,7 @@ export default function PriceListPage() {
         Start from the SEKO channel-partner prices, add your commission or a shown
         discount, then download a customer price list (CSV / PDF) or copy it into a chat.
       </p>
-      <QuoteBuilder items={priceList} groups={priceGroups} />
+      <QuoteBuilder items={items} groups={groups} />
     </div>
   );
 }

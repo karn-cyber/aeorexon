@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { products } from "@/data/products";
 import { cafeChairs, diningChairs, type Chair } from "@/data/lynchpin";
+import { priceList } from "@/data/priceList";
 import type { Product } from "@/lib/types";
 
 const DB_NAME = process.env.MONGODB_DB ?? "aorexon";
@@ -58,11 +59,20 @@ export async function POST() {
       await col.updateOne({ slug: p.slug }, { $set: p }, { upsert: true });
     }
 
+    // Seed the SEKO channel-partner price list into its own collection.
+    const priceCol = client.db(DB_NAME).collection("priceList");
+    await priceCol.createIndex({ code: 1 }, { unique: true });
+    for (const item of priceList) {
+      await priceCol.updateOne({ code: item.code }, { $set: item }, { upsert: true });
+    }
+
     const count = await col.countDocuments();
+    const priceCount = await priceCol.countDocuments();
     return NextResponse.json({
       ok: true,
-      message: `Seeded ${products.length} dosing products + ${furniture.length} furniture`,
+      message: `Seeded ${products.length} dosing + ${furniture.length} furniture + ${priceList.length} price-list items`,
       totalInCollection: count,
+      priceListInCollection: priceCount,
     });
   } catch (err) {
     return NextResponse.json(
