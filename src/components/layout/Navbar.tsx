@@ -22,7 +22,7 @@ export async function Navbar() {
       <div className="mx-auto max-w-7xl px-4">
         {/* Top row */}
         <div className="flex items-center gap-3 py-3">
-          <MobileMenu links={navLinks} isAdmin={isAdmin} />
+          <MobileMenu isAdmin={isAdmin} signedIn={signedIn} />
 
           <Link href="/" className="flex items-center gap-2 leading-none">
             <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-primary text-sm font-black text-gold">
