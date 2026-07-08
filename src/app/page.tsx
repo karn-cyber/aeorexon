@@ -25,7 +25,7 @@ const services: Service[] = [
     href: "/solutions/png-gas-pipeline",
     bar: "bg-accent",
     icon: "waypoints",
-    graphic: true,
+    img: "/pipeline/hero.jpg",
   },
   {
     tag: "FLUID CONTROL",
