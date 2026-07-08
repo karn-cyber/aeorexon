@@ -8,28 +8,38 @@ const isProtected = createRouteMatcher(["/admin(.*)", "/account(.*)", "/chat(.*)
 
 export default clerkMiddleware(async (auth, req) => {
   const host = req.headers.get("host") ?? "";
-  const url = req.nextUrl;
+  const p = req.nextUrl.pathname;
   const { userId, redirectToSignIn } = await auth();
 
-  // Serve the CRM on the crm.<domain> subdomain by rewriting to /crm/*.
-  // Everything on the CRM subdomain requires sign-in.
-  if (host.startsWith("crm.") && !url.pathname.startsWith("/crm") && !url.pathname.startsWith("/api")) {
+  // ── CRM subdomain (crm.<domain>) → serve the /crm app ──
+  if (host.startsWith("crm.")) {
+    // Auth pages, API and Next internals must pass through untouched so the
+    // sign-in flow can render on the subdomain (avoids a redirect loop).
+    const passthrough =
+      p.startsWith("/sign-in") ||
+      p.startsWith("/sign-up") ||
+      p.startsWith("/api") ||
+      p.startsWith("/_next") ||
+      p.startsWith("/crm");
+    if (passthrough) {
+      if (p.startsWith("/crm") && !userId) return redirectToSignIn({ returnBackUrl: req.url });
+      return NextResponse.next();
+    }
     if (!userId) return redirectToSignIn({ returnBackUrl: req.url });
-    const rewritten = url.clone();
-    rewritten.pathname = url.pathname === "/" ? "/crm" : `/crm${url.pathname}`;
+    const rewritten = req.nextUrl.clone();
+    rewritten.pathname = p === "/" ? "/crm" : `/crm${p}`;
     return NextResponse.rewrite(rewritten);
   }
 
-  // Explicit redirect for signed-out users (more reliable than auth.protect(),
-  // which can 404 in production when the sign-in URL can't be resolved).
+  // ── Main domain ── explicit redirect for signed-out users on protected routes
   if (isProtected(req) && !userId) {
     return redirectToSignIn({ returnBackUrl: req.url });
   }
+  return NextResponse.next();
 });
 
 export const config = {
   matcher: [
-    // Skip Next internals and static files, run on everything else.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],

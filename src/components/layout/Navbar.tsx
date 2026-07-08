@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SignInButton, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import { SearchBar } from "./SearchBar";
 import { MobileMenu } from "./MobileMenu";
 import { Icon } from "@/components/Icon";
@@ -63,12 +63,13 @@ export async function Navbar() {
             {signedIn ? (
               <UserButton />
             ) : (
-              <SignInButton mode="modal">
-                <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-text hover:border-accent hover:text-accent">
-                  <Icon name="log-in" size={16} />
-                  <span className="hidden sm:inline">Log in</span>
-                </button>
-              </SignInButton>
+              <Link
+                href="/sign-in"
+                className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-text hover:border-accent hover:text-accent"
+              >
+                <Icon name="log-in" size={16} />
+                <span className="hidden sm:inline">Log in</span>
+              </Link>
             )}
             <Link
               href="/chat/new?name=Quote%20request"

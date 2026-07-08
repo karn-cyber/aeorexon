@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SignInButton } from "@clerk/nextjs";
 import { Icon } from "@/components/Icon";
 
 interface NavLink {
@@ -97,15 +96,14 @@ export function MobileMenu({
                 </Link>
               )}
               {!signedIn && (
-                <SignInButton mode="modal">
-                  <button
-                    onClick={close}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-base font-medium text-text hover:bg-bg"
-                  >
-                    <Icon name="log-in" size={20} className="text-accent" />
-                    <span className="flex-1">Log in / Sign up</span>
-                  </button>
-                </SignInButton>
+                <Link
+                  href="/sign-in"
+                  onClick={close}
+                  className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-base font-medium text-text hover:bg-bg"
+                >
+                  <Icon name="log-in" size={20} className="text-accent" />
+                  <span className="flex-1">Log in / Sign up</span>
+                </Link>
               )}
             </div>
 
