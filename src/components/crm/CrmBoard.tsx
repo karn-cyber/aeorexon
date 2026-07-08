@@ -47,51 +47,69 @@ export function CrmBoard() {
   const stats = useMemo(() => {
     let pipeline = 0;
     let due = 0;
+    let won = 0;
     for (const l of leads) {
-      if (l.stage !== "closed" && l.stage !== "lost") pipeline += l.orderValue ?? l.quoteAmount ?? 0;
-      if (l.nextFollowUp && l.nextFollowUp <= today && l.stage !== "closed" && l.stage !== "lost") due++;
+      const open = l.stage !== "closed" && l.stage !== "lost";
+      if (open) pipeline += l.orderValue ?? l.quoteAmount ?? 0;
+      if (open && l.nextFollowUp && l.nextFollowUp <= today) due++;
+      if (l.stage === "closed") won++;
     }
-    return { pipeline, due, total: leads.length };
+    return { pipeline, due, won, total: leads.length };
   }, [leads, today]);
 
-  if (loading) return <p className="text-text-muted">Loading pipeline…</p>;
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center text-sm text-text-muted">
+        Loading pipeline…
+      </div>
+    );
+  }
 
   return (
     <div>
-      {/* Stats */}
-      <div className="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Stat label="Total leads" value={String(stats.total)} icon="users" />
-        <Stat label="Open pipeline" value={formatINR(stats.pipeline)} icon="tag" />
-        <Stat label="Follow-ups due" value={String(stats.due)} icon="handshake" accent={stats.due > 0} />
-        <Link href="/crm/leads/new" className="flex items-center justify-center gap-2 rounded-xl bg-accent p-5 font-semibold text-white hover:brightness-110">
-          <Icon name="plus" size={18} /> New Lead
+      {/* Stats — minimal, borderless tiles */}
+      <div className="mb-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
+        <Stat label="Total leads" value={String(stats.total)} />
+        <Stat label="Open pipeline" value={formatINR(stats.pipeline)} />
+        <Stat label="Follow-ups due" value={String(stats.due)} tone={stats.due > 0 ? "warn" : undefined} />
+        <Stat label="Won" value={String(stats.won)} tone="good" />
+      </div>
+
+      {/* Toolbar */}
+      <div className="mb-4 flex items-center gap-3">
+        <div className="relative flex-1 sm:max-w-xs">
+          <input
+            placeholder="Search leads…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            className="w-full rounded-lg border border-border bg-surface py-2 pl-3 pr-3 text-sm outline-none focus:border-accent"
+          />
+        </div>
+        <Link
+          href="/crm/leads/new"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110"
+        >
+          <Icon name="plus" size={16} /> New lead
         </Link>
       </div>
 
-      <input
-        placeholder="Search leads (name / company / ref)…"
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        className="mb-4 w-full max-w-sm rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary-light"
-      />
-
       {/* Kanban */}
-      <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="flex gap-3 overflow-x-auto pb-4">
         {BOARD_STAGES.map((stage) => {
           const items = filtered.filter((l) => l.stage === stage.key);
           return (
-            <div key={stage.key} className="w-72 shrink-0">
-              <div className="mb-2 flex items-center justify-between">
-                <h3 className="mono-label font-bold text-primary">{stage.label}</h3>
-                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">{items.length}</span>
+            <div key={stage.key} className="w-[17rem] shrink-0">
+              <div className="mb-2 flex items-center justify-between px-1">
+                <h3 className="text-sm font-semibold text-text">{stage.label}</h3>
+                <span className="text-xs font-medium text-text-muted">{items.length}</span>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 rounded-xl bg-surface/60 p-1.5">
                 {items.map((l) => (
                   <LeadCard key={l.id} lead={l} today={today} onMove={move} />
                 ))}
                 {items.length === 0 && (
-                  <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-text-muted">
-                    None
+                  <div className="rounded-lg border border-dashed border-border/70 py-6 text-center text-xs text-text-muted">
+                    —
                   </div>
                 )}
               </div>
@@ -103,14 +121,12 @@ export function CrmBoard() {
   );
 }
 
-function Stat({ label, value, icon, accent }: { label: string; value: string; icon: string; accent?: boolean }) {
+function Stat({ label, value, tone }: { label: string; value: string; tone?: "warn" | "good" }) {
+  const color = tone === "warn" ? "text-warning" : tone === "good" ? "text-success" : "text-text";
   return (
-    <div className={`rounded-xl border p-5 ${accent ? "border-warning/40 bg-warning/10" : "border-border bg-surface"}`}>
-      <div className="flex items-center justify-between">
-        <Icon name={icon} size={18} className={accent ? "text-warning" : "text-primary"} />
-      </div>
-      <div className="mt-2 text-2xl font-extrabold text-text">{value}</div>
-      <div className="mono-label text-text-muted">{label}</div>
+    <div className="bg-surface p-4">
+      <div className={`text-xl font-bold ${color}`}>{value}</div>
+      <div className="mt-0.5 text-xs text-text-muted">{label}</div>
     </div>
   );
 }
@@ -119,27 +135,24 @@ function LeadCard({ lead, today, onMove }: { lead: Lead; today: string; onMove: 
   const overdue = lead.nextFollowUp && lead.nextFollowUp <= today;
   const value = lead.orderValue ?? lead.quoteAmount;
   return (
-    <div className="rounded-lg border border-border bg-surface p-3 shadow-sm">
+    <div className="group rounded-lg border border-border bg-surface p-3 transition hover:border-accent/50 hover:shadow-sm">
       <Link href={`/crm/leads/${lead.id}`} className="block">
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-text">{lead.customer.name}</span>
-          <span className="mono-label text-text-muted">{lead.refNo}</span>
+        <div className="flex items-start justify-between gap-2">
+          <span className="text-sm font-semibold text-text group-hover:text-accent">{lead.customer.name}</span>
+          {value ? <span className="shrink-0 text-xs font-semibold text-text-muted">{formatINR(value)}</span> : null}
         </div>
-        {lead.customer.company && <div className="text-xs text-text-muted">{lead.customer.company}</div>}
-        <p className="mt-1 line-clamp-2 text-xs text-text-muted">{lead.requirement || "—"}</p>
-        <div className="mt-2 flex items-center gap-2">
-          {value ? <span className="text-sm font-bold text-primary">{formatINR(value)}</span> : null}
-          {lead.nextFollowUp && (
-            <span className={`mono-label rounded px-1.5 py-0.5 ${overdue ? "bg-error/15 text-error" : "bg-primary/10 text-primary"}`}>
-              F/U {lead.nextFollowUp.slice(5)}
-            </span>
-          )}
-        </div>
+        {lead.customer.company && <div className="truncate text-xs text-text-muted">{lead.customer.company}</div>}
+        {lead.nextFollowUp && (
+          <div className={`mt-2 inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium ${overdue ? "bg-error/10 text-error" : "bg-bg text-text-muted"}`}>
+            <Icon name="handshake" size={11} /> {overdue ? "Overdue" : "Follow-up"} · {lead.nextFollowUp.slice(5)}
+          </div>
+        )}
       </Link>
       <select
         value={lead.stage}
         onChange={(e) => onMove(lead.id, e.target.value as StageKey)}
-        className="mt-2 w-full rounded border border-border bg-bg px-2 py-1 text-xs outline-none"
+        aria-label="Move stage"
+        className="mt-2 w-full cursor-pointer rounded-md border border-border bg-bg px-2 py-1 text-xs text-text-muted outline-none hover:border-accent focus:border-accent"
       >
         {CRM_STAGES.map((s) => (
           <option key={s.key} value={s.key}>{s.label}</option>

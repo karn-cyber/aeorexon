@@ -47,12 +47,12 @@ export default function NewLeadPage() {
     }
   }
 
-  const field = "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm outline-none focus:border-primary-light";
-  const label = "mb-1 block text-xs font-semibold uppercase tracking-wide text-text-muted";
+  const field = "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/15";
+  const label = "mb-1 block text-xs font-medium text-text-muted";
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-2xl font-extrabold text-text">New Lead</h1>
+      <h1 className="text-xl font-bold text-text">New Lead</h1>
       <p className="mb-6 text-sm text-text-muted">Log a customer you approached today.</p>
       <form onSubmit={submit} className="space-y-5 rounded-xl border border-border bg-surface p-6">
         <div className="grid gap-4 sm:grid-cols-2">

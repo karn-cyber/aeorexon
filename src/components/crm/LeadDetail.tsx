@@ -7,8 +7,8 @@ import { formatINR } from "@/lib/pricing";
 import { COMPANY } from "@/lib/company";
 import { Icon } from "@/components/Icon";
 
-const F = "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary-light";
-const L = "mb-1 block text-[11px] font-semibold uppercase tracking-wide text-text-muted";
+const F = "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/15";
+const L = "mb-1 block text-xs font-medium text-text-muted";
 
 export function LeadDetail({ id }: { id: string }) {
   const router = useRouter();
@@ -113,10 +113,10 @@ export function LeadDetail({ id }: { id: string }) {
       </div>
 
       {/* Stage stepper */}
-      <div className="flex flex-wrap gap-2 rounded-xl border border-border bg-surface p-3">
+      <div className="flex flex-wrap gap-1.5 rounded-xl border border-border bg-surface p-2">
         {CRM_STAGES.map((s) => (
           <button key={s.key} onClick={() => setStage(s.key)} title={s.hint}
-            className={`mono-label rounded-full px-3 py-1.5 font-semibold ${lead.stage === s.key ? "bg-primary text-white" : "border border-border text-text-muted hover:border-primary-light"}`}>
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${lead.stage === s.key ? "bg-accent text-white" : "text-text-muted hover:bg-bg"}`}>
             {s.label}
           </button>
         ))}
@@ -219,7 +219,7 @@ export function LeadDetail({ id }: { id: string }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-surface p-5">
-      <h2 className="mono-label mb-3 font-bold text-primary">{title}</h2>
+      <h2 className="mb-3 text-sm font-semibold text-text">{title}</h2>
       {children}
     </div>
   );
