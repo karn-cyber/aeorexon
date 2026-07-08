@@ -6,6 +6,7 @@ import { Icon } from "@/components/Icon";
 
 const NAV = [
   { href: "/crm", label: "Pipeline", icon: "layout-dashboard", exact: true },
+  { href: "/crm/leads", label: "All leads", icon: "users", exact: true },
   { href: "/crm/leads/new", label: "New lead", icon: "plus" },
 ];
 

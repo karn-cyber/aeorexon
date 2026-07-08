@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CRM_STAGES, stageLabel, type Lead, type OrderItem, type StageKey } from "@/lib/crmTypes";
 import { formatINR } from "@/lib/pricing";
+import { computeLine, grandTotal, type QuoteSettings } from "@/lib/quoteBuilder";
+import { priceList } from "@/data/priceList";
 import { COMPANY } from "@/lib/company";
 import { Icon } from "@/components/Icon";
 
@@ -18,6 +20,7 @@ export function LeadDetail({ id }: { id: string }) {
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [pquery, setPquery] = useState("");
 
   async function load() {
     const res = await fetch(`/api/crm/leads/${id}`);
@@ -42,7 +45,20 @@ export function LeadDetail({ id }: { id: string }) {
 
   async function save(extra?: Partial<Lead> & { note?: string }) {
     setSaving(true);
-    const payload = { ...d, items, ...extra };
+    const total = grandTotal(
+      items.map((it) =>
+        computeLine({ code: "", desc: it.desc, moc: "", base: it.rate, group: "", qty: it.qty }, {
+          markupPct: d.quoteMarkupPct ?? 0,
+          discountPct: d.quoteDiscountPct ?? 0,
+          discountMode: d.quoteDiscountMode ?? "shown",
+          gstPct: d.quoteGstPct ?? 18,
+          includeGst: d.quoteIncludeGst ?? false,
+          roundTo: 1,
+          withQty: true,
+        })
+      )
+    );
+    const payload = { ...d, items, quoteAmount: total || d.quoteAmount, ...extra };
     const res = await fetch(`/api/crm/leads/${id}`, {
       method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
     });
@@ -65,14 +81,29 @@ export function LeadDetail({ id }: { id: string }) {
     await save({ stage, note: `Stage → ${stageLabel(stage)}` });
   }
 
-  const orderTotal = items.reduce((s, i) => s + i.qty * i.rate, 0);
+  // Quotation pricing settings live on the draft so they save with the lead.
+  const qs: QuoteSettings = {
+    markupPct: d.quoteMarkupPct ?? 0,
+    discountPct: d.quoteDiscountPct ?? 0,
+    discountMode: d.quoteDiscountMode ?? "shown",
+    gstPct: d.quoteGstPct ?? 18,
+    includeGst: d.quoteIncludeGst ?? false,
+    roundTo: 1,
+    withQty: true,
+  };
+  const lines = items.map((it) =>
+    computeLine({ code: "", desc: it.desc, moc: "", base: it.rate, group: "", qty: it.qty }, qs)
+  );
+  const grand = grandTotal(lines);
+  const showDisc = qs.discountPct > 0;
 
   function printDoc(kind: "quotation" | "proforma" | "invoice" | "letter") {
     const w = window.open("", "_blank");
     if (!w) return;
     const cust = d.customer as Lead["customer"];
     const titleMap = { quotation: "QUOTATION", proforma: "PROFORMA INVOICE", invoice: "TAX INVOICE", letter: "" };
-    const rows = items.map((it, i) => `<tr><td>${i + 1}</td><td>${it.desc}</td><td style="text-align:right">${it.qty}</td><td style="text-align:right">${formatINR(it.rate)}</td><td style="text-align:right">${formatINR(it.qty * it.rate)}</td></tr>`).join("");
+    const rows = lines.map((l, i) => `<tr><td>${i + 1}</td><td>${l.desc}</td><td style="text-align:right">${l.qty}</td>${showDisc ? `<td style="text-align:right;text-decoration:line-through;color:#888">${formatINR(l.listPrice)}</td><td style="text-align:right">${qs.discountPct}%</td>` : ""}<td style="text-align:right">${formatINR(l.net)}</td>${qs.includeGst ? `<td style="text-align:right">${formatINR(l.gstAmount * l.qty)}</td>` : ""}<td style="text-align:right">${formatINR(l.lineTotal)}</td></tr>`).join("");
+    const colspan = 3 + (showDisc ? 2 : 0) + (qs.includeGst ? 1 : 0);
     const bank = COMPANY.bank;
     const body = kind === "letter"
       ? `<p>Date: ${new Date().toISOString().slice(0,10)}</p>
@@ -84,10 +115,11 @@ export function LeadDetail({ id }: { id: string }) {
       : `<div class="row"><div><b>${titleMap[kind]}</b><br/>Ref: ${lead?.refNo}<br/>Date: ${new Date().toISOString().slice(0,10)}</div>
            <div style="text-align:right"><b>${COMPANY.name}</b><br/>${COMPANY.phone}<br/>${COMPANY.email}<br/>GSTIN: ${COMPANY.gstin}</div></div>
          <p><b>To:</b> ${cust?.name ?? ""}${cust?.company ? ", " + cust.company : ""}${cust?.gstin ? "<br/>GSTIN: " + cust.gstin : ""}</p>
-         <table><thead><tr><th>#</th><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody>${rows || '<tr><td colspan=5>No line items</td></tr>'}</tbody>
-           <tfoot><tr><td colspan="4" style="text-align:right"><b>Total</b></td><td style="text-align:right"><b>${formatINR(orderTotal)}</b></td></tr>
-           ${kind === "proforma" && d.advanceAmount ? `<tr><td colspan="4" style="text-align:right">Advance</td><td style="text-align:right">${formatINR(d.advanceAmount)}</td></tr>` : ""}</tfoot>
+         <table><thead><tr><th>#</th><th>Description</th><th>Qty</th>${showDisc ? "<th>List</th><th>Disc</th>" : ""}<th>Unit</th>${qs.includeGst ? `<th>GST ${qs.gstPct}%</th>` : ""}<th>Amount</th></tr></thead><tbody>${rows || `<tr><td colspan=${colspan + 1}>No line items</td></tr>`}</tbody>
+           <tfoot><tr><td colspan="${colspan}" style="text-align:right"><b>Grand Total${qs.includeGst ? " (incl. GST)" : ""}</b></td><td style="text-align:right"><b>${formatINR(grand)}</b></td></tr>
+           ${kind === "proforma" && d.advanceAmount ? `<tr><td colspan="${colspan}" style="text-align:right">Advance received</td><td style="text-align:right">${formatINR(d.advanceAmount)}</td></tr><tr><td colspan="${colspan}" style="text-align:right">Balance due</td><td style="text-align:right">${formatINR(Math.max(0, grand - d.advanceAmount))}</td></tr>` : ""}</tfoot>
          </table>
+         ${!qs.includeGst ? `<p class="muted">GST ${qs.gstPct}% extra. Ex-works. Transport extra.</p>` : ""}
          ${kind !== "invoice" ? `<div class="bank"><b>Bank details</b><br/>${bank.accountName} · A/c ${bank.accountNo}<br/>${bank.name}, ${bank.branch} · IFSC ${bank.ifsc}</div>` : ""}
          ${kind === "proforma" ? `<p class="muted">This is a proforma invoice issued against advance payment. Final tax invoice will follow on dispatch.</p>` : ""}`;
     w.document.write(`<html><head><title>${lead?.refNo} ${titleMap[kind] || "Letter"}</title>
@@ -136,28 +168,101 @@ export function LeadDetail({ id }: { id: string }) {
             <div className="mt-3"><label className={L}>Requirement</label><textarea rows={2} className={F} value={d.requirement ?? ""} onChange={(e) => set("requirement", e.target.value)} /></div>
           </Section>
 
-          <Section title="Quotation">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div><label className={L}>Quote amount (₹)</label><input type="number" className={F} value={d.quoteAmount ?? ""} onChange={(e) => set("quoteAmount", Number(e.target.value) || undefined)} /></div>
-              <div><label className={L}>Quote sent date</label><input type="date" className={F} value={d.quoteSentDate ?? ""} onChange={(e) => set("quoteSentDate", e.target.value)} /></div>
-            </div>
-          </Section>
+          <Section title="Quotation builder">
+            {/* Product selector */}
+            <label className={L}>Add products (from price list)</label>
+            <input
+              className={F}
+              placeholder="Search code or spec…"
+              value={pquery}
+              onChange={(e) => setPquery(e.target.value)}
+            />
+            {pquery.trim().length >= 2 && (
+              <div className="mt-1 max-h-44 overflow-y-auto rounded-lg border border-border">
+                {priceList
+                  .filter((p) => (p.code + " " + p.desc).toLowerCase().includes(pquery.trim().toLowerCase()))
+                  .slice(0, 8)
+                  .map((p) => (
+                    <button
+                      key={p.code}
+                      onClick={() => {
+                        setItems([...items, { desc: `${p.code} — ${p.desc}${p.moc ? " (" + p.moc + ")" : ""}`, qty: 1, rate: p.base }]);
+                        setPquery("");
+                      }}
+                      className="flex w-full items-center justify-between gap-2 border-b border-border px-3 py-2 text-left text-sm last:border-0 hover:bg-bg"
+                    >
+                      <span className="min-w-0"><span className="font-medium text-text">{p.code}</span> <span className="text-text-muted">· {p.desc}</span></span>
+                      <span className="shrink-0 text-text-muted">{formatINR(p.base)}</span>
+                    </button>
+                  ))}
+              </div>
+            )}
 
-          <Section title="Order & line items">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div><label className={L}>PO number</label><input className={F} value={d.poNumber ?? ""} onChange={(e) => set("poNumber", e.target.value)} /></div>
-              <div><label className={L}>Order value (₹)</label><input type="number" className={F} value={d.orderValue ?? ""} onChange={(e) => set("orderValue", Number(e.target.value) || undefined)} /></div>
-            </div>
-            <div className="mt-3 space-y-2">
+            {/* Line items — base (cost) rate */}
+            <div className="mt-4 space-y-2">
+              <div className="flex gap-2 px-1 text-[11px] font-medium text-text-muted">
+                <span className="flex-1">Item</span><span className="w-14 text-center">Qty</span><span className="w-24 text-right">Base ₹</span><span className="w-6" />
+              </div>
               {items.map((it, i) => (
-                <div key={i} className="flex gap-2">
+                <div key={i} className="flex items-center gap-2">
                   <input className={`${F} flex-1`} placeholder="Description" value={it.desc} onChange={(e) => setItems(items.map((x, j) => j === i ? { ...x, desc: e.target.value } : x))} />
-                  <input type="number" className={`${F} w-16`} placeholder="Qty" value={it.qty} onChange={(e) => setItems(items.map((x, j) => j === i ? { ...x, qty: Number(e.target.value) } : x))} />
-                  <input type="number" className={`${F} w-24`} placeholder="Rate" value={it.rate} onChange={(e) => setItems(items.map((x, j) => j === i ? { ...x, rate: Number(e.target.value) } : x))} />
+                  <input type="number" className={`${F} w-14`} value={it.qty} onChange={(e) => setItems(items.map((x, j) => j === i ? { ...x, qty: Number(e.target.value) } : x))} />
+                  <input type="number" className={`${F} w-24`} value={it.rate} onChange={(e) => setItems(items.map((x, j) => j === i ? { ...x, rate: Number(e.target.value) } : x))} />
                   <button onClick={() => setItems(items.filter((_, j) => j !== i))} className="text-text-muted hover:text-error"><Icon name="trash-2" size={16} /></button>
                 </div>
               ))}
-              <button onClick={() => setItems([...items, { desc: "", qty: 1, rate: 0 }])} className="mono-label text-accent hover:underline">+ Add item ({formatINR(orderTotal)})</button>
+              <button onClick={() => setItems([...items, { desc: "", qty: 1, rate: 0 }])} className="text-sm font-medium text-accent hover:underline">+ Add blank line</button>
+            </div>
+
+            {/* Pricing controls */}
+            <div className="mt-5 rounded-lg border border-border bg-bg/50 p-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div><label className={L}>Commission / markup %</label><input type="number" className={F} value={d.quoteMarkupPct ?? ""} onChange={(e) => set("quoteMarkupPct", Number(e.target.value) || 0)} /></div>
+                <div><label className={L}>Discount %</label><input type="number" className={F} value={d.quoteDiscountPct ?? ""} onChange={(e) => set("quoteDiscountPct", Number(e.target.value) || 0)} /></div>
+                <div>
+                  <label className={L}>GST %</label>
+                  <div className="flex items-center gap-2">
+                    <input type="number" className={`${F} w-20`} value={d.quoteGstPct ?? 18} onChange={(e) => set("quoteGstPct", Number(e.target.value) || 0)} />
+                    <label className="flex items-center gap-1 text-xs text-text-muted"><input type="checkbox" checked={!!d.quoteIncludeGst} onChange={(e) => set("quoteIncludeGst", e.target.checked)} className="h-4 w-4 accent-[var(--color-accent)]" /> add</label>
+                  </div>
+                </div>
+              </div>
+              {showDisc && (
+                <div className="mt-3">
+                  <label className={L}>Discount type</label>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {(["shown", "real"] as const).map((m) => (
+                      <label key={m} className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 ${(d.quoteDiscountMode ?? "shown") === m ? "border-accent bg-accent/5 text-text" : "border-border text-text-muted"}`}>
+                        <input type="radio" name="qdm" checked={(d.quoteDiscountMode ?? "shown") === m} onChange={() => set("quoteDiscountMode", m)} className="accent-[var(--color-accent)]" />
+                        {m === "shown" ? "Shown only (price unchanged)" : "Real (reduces price)"}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* Live preview */}
+              {lines.length > 0 && (
+                <div className="mt-4 border-t border-border pt-3 text-sm">
+                  {lines.map((l, i) => (
+                    <div key={i} className="flex items-center justify-between py-0.5 text-text-muted">
+                      <span className="truncate pr-2">{l.desc || "—"} ×{l.qty}</span>
+                      <span className="shrink-0">
+                        {showDisc && <span className="mr-1 text-xs line-through">{formatINR(l.listPrice)}</span>}
+                        <span className="font-medium text-text">{formatINR(l.lineTotal)}</span>
+                      </span>
+                    </div>
+                  ))}
+                  <div className="mt-2 flex justify-between border-t border-border pt-2 font-bold text-text">
+                    <span>Grand total {qs.includeGst ? "(incl. GST)" : `(+${qs.gstPct}% GST)`}</span>
+                    <span>{formatINR(grand)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div><label className={L}>Quote sent date</label><input type="date" className={F} value={d.quoteSentDate ?? ""} onChange={(e) => set("quoteSentDate", e.target.value)} /></div>
+              <div><label className={L}>PO number (on order)</label><input className={F} value={d.poNumber ?? ""} onChange={(e) => set("poNumber", e.target.value)} /></div>
             </div>
           </Section>
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 import { getCurrentUserInfo } from "@/lib/auth";
 import { Icon } from "@/components/Icon";
 
@@ -34,25 +34,34 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl gap-8 px-4 py-8">
-      <aside className="hidden w-56 shrink-0 lg:block">
-        <div className="sticky top-24 space-y-1">
-          <p className="px-3 pb-2 text-xs font-bold uppercase tracking-wide text-text-muted">
-            Admin
-          </p>
-          {NAV.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-text-muted hover:bg-surface hover:text-primary"
-            >
-              <Icon name={n.icon} size={18} />
-              {n.label}
-            </Link>
-          ))}
+    <div className="min-h-screen bg-bg">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-surface px-4 py-3">
+        <Link href="/admin" className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-black text-gold">A</span>
+          <span className="text-base font-bold tracking-tight text-text">Aorexon <span className="text-text-muted">Admin</span></span>
+        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/" className="text-sm text-text-muted hover:text-text">← Site</Link>
+          <UserButton />
         </div>
-      </aside>
-      <div className="min-w-0 flex-1">{children}</div>
+      </header>
+      <div className="mx-auto flex max-w-7xl gap-8 px-4 py-8">
+        <aside className="hidden w-56 shrink-0 lg:block">
+          <div className="sticky top-20 space-y-1">
+            {NAV.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-text-muted hover:bg-surface hover:text-primary"
+              >
+                <Icon name={n.icon} size={18} />
+                {n.label}
+              </Link>
+            ))}
+          </div>
+        </aside>
+        <div className="min-w-0 flex-1">{children}</div>
+      </div>
     </div>
   );
 }

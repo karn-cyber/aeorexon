@@ -55,6 +55,12 @@ export interface Lead {
   // Quote
   quoteAmount?: number;
   quoteSentDate?: string;
+  // Quotation pricing controls (feed the generated documents)
+  quoteMarkupPct?: number;
+  quoteDiscountPct?: number;
+  quoteDiscountMode?: "shown" | "real";
+  quoteGstPct?: number;
+  quoteIncludeGst?: boolean;
   // Order
   poNumber?: string;
   orderValue?: number;
