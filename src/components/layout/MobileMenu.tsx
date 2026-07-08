@@ -97,7 +97,7 @@ export function MobileMenu({
               )}
               {!signedIn && (
                 <Link
-                  href="/sign-in"
+                  href="/account"
                   onClick={close}
                   className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-base font-medium text-text hover:bg-bg"
                 >

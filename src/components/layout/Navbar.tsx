@@ -64,7 +64,7 @@ export async function Navbar() {
               <UserButton />
             ) : (
               <Link
-                href="/sign-in"
+                href="/account"
                 className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-text hover:border-accent hover:text-accent"
               >
                 <Icon name="log-in" size={16} />
