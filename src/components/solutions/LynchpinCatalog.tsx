@@ -41,28 +41,31 @@ function ChairCard({
   onOpen: () => void;
 }) {
   return (
-    <button
-      data-reveal
-      onClick={onOpen}
-      style={{ transitionDelay: `${(index % 6) * 45}ms` }}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface text-left transition hover:-translate-y-1 hover:shadow-lg"
-    >
-      <div className="relative aspect-square w-full overflow-hidden bg-gradient-to-b from-bg to-white">
-        <Image
-          src={chair.image}
-          alt={chair.name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
-          className="object-contain p-3 transition duration-500 group-hover:scale-110"
-        />
-      </div>
-      <div className="px-3 py-2.5">
-        <div className="truncate text-sm font-semibold text-text group-hover:text-primary">
-          {chair.name}
+    <div data-reveal className="tilt-scene" style={{ transitionDelay: `${(index % 6) * 45}ms` }}>
+      <button
+        onClick={onOpen}
+        className="tilt-card group flex w-full flex-col overflow-hidden rounded-xl border border-border bg-surface text-left"
+      >
+        <div className="relative aspect-square w-full overflow-hidden bg-gradient-to-b from-bg to-white">
+          <Image
+            src={chair.image}
+            alt={chair.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
+            className="tilt-float object-contain p-3"
+          />
+          <span className="mono-label absolute right-2 top-2 rounded bg-primary/80 px-1.5 py-0.5 text-[9px] text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
+            View
+          </span>
         </div>
-        <div className="text-xs text-text-muted">Lynchpin</div>
-      </div>
-    </button>
+        <div className="px-3 py-2.5">
+          <div className="truncate text-sm font-semibold text-text group-hover:text-accent">
+            {chair.name}
+          </div>
+          <div className="mono-label text-text-muted">Lynchpin</div>
+        </div>
+      </button>
+    </div>
   );
 }
 

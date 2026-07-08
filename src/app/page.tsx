@@ -4,87 +4,86 @@ import { SearchBar } from "@/components/layout/SearchBar";
 import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
 import { FurnitureStrip } from "@/components/home/FurnitureStrip";
-import { categories } from "@/data/categories";
 import { getFeaturedProducts } from "@/lib/products";
 
-// Amazon-style "pick a department" tiles — photo where we have it, otherwise a
-// clean graphic tile. Never a stopper: the page keeps going below.
-type Tile = {
+type Service = {
+  tag: string;
   label: string;
-  sub: string;
+  desc: string;
+  cta: string;
   href: string;
+  bar: string;
   icon: string;
-} & (
-  | { kind: "cover"; img: string }
-  | { kind: "product"; img: string }
-  | { kind: "graphic" }
-);
+} & ({ img: string } | { graphic: true });
 
-const departments: Tile[] = [
+const services: Service[] = [
   {
+    tag: "INFRASTRUCTURE",
+    label: "PNG Gas Pipelines",
+    desc: "High-pressure PNG installation with structural integrity and NDT-verified welds.",
+    cta: "View project logs",
+    href: "/solutions/png-gas-pipeline",
+    bar: "bg-accent",
+    icon: "waypoints",
+    graphic: true,
+  },
+  {
+    tag: "FLUID CONTROL",
     label: "Dosing Pumps",
-    sub: "SEKO / Water & Industry",
+    desc: "Precision chemical dosing with tight variance tolerance across the SEKO range.",
+    cta: "Tech specs",
     href: "/products",
+    bar: "bg-gold",
     icon: "droplets",
-    kind: "cover",
     img: "/hero/dosing-pump.jpg",
   },
   {
-    label: "Café & Dining Seating",
-    sub: "Lynchpin",
+    tag: "AUTOMATION",
+    label: "Controllers",
+    desc: "Smart control units for real-time water-quality monitoring and feedback loops.",
+    cta: "Control suite",
+    href: "/categories/controllers",
+    bar: "bg-primary-light",
+    icon: "gauge",
+    img: "/hero/controller.jpg",
+  },
+  {
+    tag: "ARCHITECTURAL",
+    label: "Furniture",
+    desc: "Architectural-grade seating for cafés, hospitality and specialised interiors.",
+    cta: "Gallery",
     href: "/solutions/lynchpin-seating",
+    bar: "bg-accent-light",
     icon: "armchair",
-    kind: "cover",
     img: "/partners/lynchpin/cafe-1.jpg",
-  },
-  {
-    label: "PNG Gas Pipelines",
-    sub: "Chaze Engineering",
-    href: "/solutions/png-gas-pipeline",
-    icon: "waypoints",
-    kind: "graphic",
-  },
-  {
-    label: "URB Bearings",
-    sub: "URB Group, Romania",
-    href: "/solutions/urb-bearings",
-    icon: "circle-dot",
-    kind: "graphic",
   },
 ];
 
-function DepartmentTile({ t }: { t: Tile }) {
+function ServiceCard({ s }: { s: Service }) {
   return (
     <Link
-      href={t.href}
-      className="group relative flex h-52 flex-col justify-end overflow-hidden rounded-2xl border border-border sm:h-60"
+      href={s.href}
+      className="group flex flex-col overflow-hidden rounded-lg border border-border bg-surface transition hover:-translate-y-1 hover:shadow-xl"
     >
-      {t.kind === "cover" && (
-        <>
-          <Image src={t.img} alt={t.label} fill sizes="(max-width:640px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-        </>
-      )}
-      {t.kind === "product" && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200" />
-          <Image src={t.img} alt={t.label} fill sizes="(max-width:640px) 50vw, 25vw" className="object-contain p-6 transition duration-500 group-hover:scale-105" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 to-transparent" />
-        </>
-      )}
-      {t.kind === "graphic" && (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-light">
-          <Icon name={t.icon} size={64} strokeWidth={1.25} className="absolute right-4 top-4 text-white/25" />
-        </div>
-      )}
-      <div className="relative p-4 text-white">
-        <div className="flex items-center gap-1.5 text-xs font-medium text-white/75">
-          <Icon name={t.icon} size={14} /> {t.sub}
-        </div>
-        <div className="mt-1 text-lg font-bold leading-tight">{t.label}</div>
-        <div className="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-accent-light">
-          Shop <Icon name="arrow-right" size={14} />
-        </div>
+      <div className={`h-1 ${s.bar}`} />
+      <div className="relative aspect-[4/3] overflow-hidden bg-primary">
+        {"img" in s ? (
+          <Image src={s.img} alt={s.label} fill sizes="(max-width:768px) 50vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" />
+        ) : (
+          <div className="tech-grid-dark flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-ink">
+            <Icon name={s.icon} size={52} strokeWidth={1.25} className="text-accent-light/60" />
+          </div>
+        )}
+        <span className="mono-label absolute left-3 top-3 rounded bg-black/55 px-2 py-1 text-white/85 backdrop-blur">
+          {s.tag}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-lg font-bold text-primary">{s.label}</h3>
+        <p className="mt-1 flex-1 text-sm text-text-muted">{s.desc}</p>
+        <span className="mono-label mt-4 inline-flex items-center gap-1.5 font-bold text-accent">
+          {s.cta} <Icon name="arrow-right" size={14} />
+        </span>
       </div>
     </Link>
   );
@@ -95,120 +94,170 @@ export default async function Home() {
 
   return (
     <div>
-      {/* Hero — minimal, product-first, shows what we do */}
-      <section className="border-b border-border bg-surface">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 lg:grid-cols-2 lg:py-16">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-              Dosing systems · Gas pipelines · Bearings · Seating
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold leading-tight text-text sm:text-5xl">
-              One supplier for what your{" "}
-              <span className="text-primary">site</span> and{" "}
-              <span className="text-primary">space</span> need.
-            </h1>
-            <p className="mt-4 max-w-xl text-lg text-text-muted">
-              Browse dosing pumps and controllers, request gas-pipeline and bearing
-              supply, and fit out cafés with Lynchpin seating — all in one place.
-            </p>
-            <div className="mt-6 max-w-xl">
-              <SearchBar large />
-            </div>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link href="/products" className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 font-semibold text-white hover:brightness-110">
-                <Icon name="shopping-cart" size={18} /> Browse products
-              </Link>
-              <Link href="/solutions" className="rounded-lg border border-border px-6 py-3 font-semibold text-text hover:border-primary-light">
-                Our areas of work
-              </Link>
-            </div>
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden bg-ink text-white">
+        <div className="tech-grid-dark absolute inset-0" />
+        <div className="absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-accent/20 blur-[120px]" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 lg:py-28">
+          <p className="mono-label text-accent-light">SYSTEM_STATUS: OPERATIONAL // EST. 1994</p>
+          <h1 className="mt-5 max-w-4xl text-4xl font-extrabold leading-[1.05] sm:text-6xl">
+            Engineering the{" "}
+            <span className="text-accent-light">infrastructure</span> of tomorrow.
+          </h1>
+          <p className="mt-5 max-w-xl text-lg text-white/70">
+            High-precision industrial solutions for complex fluid management, automated
+            monitoring, gas-pipeline infrastructure and architectural-grade furnishing.
+          </p>
+
+          <div className="mt-8 max-w-xl">
+            <SearchBar large />
           </div>
 
-          {/* Compact photo collage of what we do */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="relative col-span-2 h-44 overflow-hidden rounded-2xl sm:h-56">
-              <Image src="/partners/lynchpin/cafe-1.jpg" alt="Café & dining seating" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" priority />
-              <span className="absolute bottom-2.5 left-2.5 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">Seating</span>
-            </div>
-            <div className="relative h-28 overflow-hidden rounded-xl sm:h-32">
-              <Image src="/hero/dosing-pump.jpg" alt="SEKO dosing pump" fill sizes="22vw" className="object-cover" />
-              <span className="absolute bottom-2 left-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">Dosing pumps</span>
-            </div>
-            <div className="relative h-28 overflow-hidden rounded-xl sm:h-32">
-              <Image src="/hero/controller.jpg" alt="Water quality controller" fill sizes="22vw" className="object-cover" />
-              <span className="absolute bottom-2 left-2 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-semibold text-white backdrop-blur">Controllers</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Department selector */}
-      <section className="mx-auto max-w-7xl px-4 py-12">
-        <div className="flex items-end justify-between">
-          <h2 className="text-2xl font-bold text-text">What are you looking for?</h2>
-          <Link href="/solutions" className="hidden text-sm font-semibold text-accent hover:underline sm:inline">
-            See all →
-          </Link>
-        </div>
-        <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {departments.map((t) => (
-            <DepartmentTile key={t.label} t={t} />
-          ))}
-        </div>
-      </section>
-
-      {/* Featured products (products-first) */}
-      {featured.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 pb-14">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-text">Featured products</h2>
-            <Link href="/products" className="text-sm font-semibold text-accent hover:underline">
-              View all →
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/products" className="mono-label inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3.5 font-bold text-white transition hover:brightness-110">
+              Explore Capabilities <Icon name="arrow-right" size={15} />
+            </Link>
+            <Link href="/solutions" className="mono-label inline-flex items-center gap-2 rounded-md border border-white/25 px-6 py-3.5 font-bold text-white transition hover:bg-white/10">
+              Areas of Work
             </Link>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((p) => (
-              <ProductCard key={p.slug} product={p} />
+
+          <div className="mono-label mt-16 hidden justify-end gap-8 text-white/40 sm:flex">
+            <span>COORD_X: 46.802.11</span>
+            <span>COORD_Y: 12.003.04</span>
+            <span>REF_ID: AX-990-AOREXON</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Core services ── */}
+      <section className="tech-grid border-b border-border">
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="mono-label text-accent">// CAPABILITIES</p>
+              <h2 className="mt-2 text-3xl font-extrabold text-primary">Core Services &amp; Products</h2>
+            </div>
+            <p className="mono-label max-w-xs text-text-muted">
+              Integrated solutions across four verticals. Zero-tolerance quality protocols
+              applied to every component.
+            </p>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {services.map((s) => (
+              <ServiceCard key={s.label} s={s} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Case study band ── */}
+      <section className="bg-ink text-white">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 lg:grid-cols-[1.6fr_1fr]">
+          <div>
+            <p className="mono-label text-accent-light">CASE_STUDY_001 // ENERGY_SECTOR</p>
+            <h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">
+              400 km Pipeline Network Optimization
+            </h2>
+            <p className="mt-4 max-w-2xl text-white/70">
+              Aorexon delivered a full-scale automated dosing and monitoring network for a
+              trans-regional gas line — cutting maintenance cost and eliminating manual error
+              through controller automation and NDT-verified welding.
+            </p>
+            <div className="mt-8 flex gap-12">
+              <div>
+                <div className="text-3xl font-extrabold text-accent-light">99.9%</div>
+                <div className="mono-label mt-1 text-white/50">Uptime reliability</div>
+              </div>
+              <div>
+                <div className="text-3xl font-extrabold text-accent-light">API 1104</div>
+                <div className="mono-label mt-1 text-white/50">Welding standard</div>
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-4">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-6">
+              <Icon name="settings" size={22} className="text-accent-light" />
+              <h3 className="mt-3 font-bold">Precision</h3>
+              <p className="mt-1 text-sm text-white/60">Blueprints crafted to micron-level accuracy before fabrication begins.</p>
+            </div>
+            <div className="rounded-lg bg-accent-light p-6 text-ink">
+              <Icon name="shield-alert" size={22} />
+              <h3 className="mt-3 font-bold">Compliance</h3>
+              <p className="mt-1 text-sm text-ink/70">Certified to international ISO 9001 and safety standards.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Featured products ── */}
+      {featured.length > 0 && (
+        <section className="tech-grid">
+          <div className="mx-auto max-w-7xl px-4 py-16">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="mono-label text-accent">// CATALOGUE</p>
+                <h2 className="mt-2 text-3xl font-extrabold text-primary">Featured Products</h2>
+              </div>
+              <Link href="/products" className="mono-label font-bold text-accent hover:underline">View all →</Link>
+            </div>
+            <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {featured.map((p) => (
+                <ProductCard key={p.slug} product={p} />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Dynamic furniture strip */}
+      {/* ── Furniture strip ── */}
       <FurnitureStrip />
 
-      {/* Shop pumps by category */}
-      <section className="mx-auto max-w-7xl px-4 py-14">
-        <h2 className="text-2xl font-bold text-text">Shop dosing equipment by category</h2>
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-          {categories.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/categories/${c.slug}`}
-              className="group flex flex-col items-center rounded-xl border border-border bg-surface p-5 text-center transition hover:border-primary-light hover:shadow-md"
-            >
-              <Icon name={c.icon} size={30} strokeWidth={1.75} className="text-primary" />
-              <div className="mt-3 text-sm font-semibold text-text group-hover:text-primary">
-                {c.name.replace(/ \(.*\)/, "")}
+      {/* ── Engineering protocols ── */}
+      <section className="border-t border-border tech-grid">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="mono-label text-accent">// PROTOCOLS</p>
+            <h2 className="mt-2 text-3xl font-extrabold text-primary">Engineering Protocols</h2>
+            <p className="mt-3 max-w-md text-text-muted">
+              Our commitment to safety is engineered into every joint, valve and circuit board
+              we deploy. We don&apos;t just build systems — we build guarantees.
+            </p>
+            <ul className="mono-label mt-6 space-y-3">
+              {["ASTM_COMPLIANT_STEEL", "TRIPLE_CHECK_WELD_INSPECTION", "REALTIME_LEAK_DETECTION", "ISO_9001_CERTIFIED"].map((p) => (
+                <li key={p} className="flex items-center gap-3 text-primary">
+                  <span className="h-2 w-2 shrink-0 bg-accent" /> {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="relative overflow-hidden rounded-lg border border-border bg-ink p-6 text-white">
+            <div className="tech-grid-dark absolute inset-0" />
+            <div className="relative">
+              <div className="mono-label flex justify-between text-white/50">
+                <span>DOC_REF: AX-880-SPEC</span>
+                <span>REV 2</span>
               </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Why Aorexon */}
-      <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="grid gap-6 rounded-2xl bg-surface p-8 sm:grid-cols-3">
-          {[
-            { t: "Use-case matched", d: "Products lead with what they’re for — not just a spec sheet." },
-            { t: "Full specs, no calls", d: "Browse the whole catalogue and datasheets without logging in." },
-            { t: "Buy direct or get a quote", d: "Order stock items online, or request a quote for projects." },
-          ].map((b) => (
-            <div key={b.t}>
-              <h3 className="font-bold text-primary">{b.t}</h3>
-              <p className="mt-1 text-sm text-text-muted">{b.d}</p>
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                {[
+                  { k: "Variance", v: "±0.01%" },
+                  { k: "IP Class", v: "IP65" },
+                  { k: "Max Pressure", v: "100 bar" },
+                  { k: "Temp", v: "55°C" },
+                  { k: "Response", v: "<1 ms" },
+                  { k: "Warranty", v: "5 yr" },
+                ].map((x) => (
+                  <div key={x.k} className="rounded border border-white/10 bg-white/5 p-3">
+                    <div className="text-lg font-extrabold text-accent-light">{x.v}</div>
+                    <div className="mono-label mt-1 text-white/45">{x.k}</div>
+                  </div>
+                ))}
+              </div>
+              <Link href="/products" className="mono-label mt-6 inline-flex items-center gap-2 rounded-md bg-accent-light px-5 py-3 font-bold text-ink hover:brightness-105">
+                View technical catalogue <Icon name="arrow-right" size={14} />
+              </Link>
             </div>
-          ))}
+          </div>
         </div>
       </section>
     </div>

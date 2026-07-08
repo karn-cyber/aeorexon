@@ -1,60 +1,77 @@
 import Link from "next/link";
-import { categories } from "@/data/categories";
 
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-border bg-primary text-white/80">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <div className="text-2xl font-extrabold uppercase tracking-tight">
-            <span className="text-white">A</span>
-            <span className="text-accent">O</span>
-            <span className="text-white">REXON</span>
+    <footer className="mt-16 border-t border-white/10 bg-ink text-white/70">
+      <div className="tech-grid-dark">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-white/10 text-sm font-black text-gold">
+                A
+              </span>
+              <span className="text-lg font-extrabold uppercase tracking-tight text-white">
+                Aorexon <span className="text-white/50">Systems</span>
+              </span>
+            </div>
+            <p className="mono-label mt-3 text-gold/90">Engineering Solutions. Delivering Excellence.</p>
+            <p className="mt-3 max-w-xs text-sm text-white/55">
+              High-precision industrial solutions for fluid management, gas infrastructure,
+              bearings and architectural-grade seating. Since 1994.
+            </p>
           </div>
-          <p className="mt-3 text-sm text-white/60">
-            Industrial dosing equipment from SEKO / Water &amp; Industry —
-            ordered intelligently.
-          </p>
+
+          <FooterCol title="Engineering">
+            <FooterLink href="/products">Dosing Pumps</FooterLink>
+            <FooterLink href="/solutions/png-gas-pipeline">PNG Gas Pipelines</FooterLink>
+            <FooterLink href="/solutions/urb-bearings">URB Bearings</FooterLink>
+            <FooterLink href="/solutions/lynchpin-seating">Furniture &amp; Seating</FooterLink>
+          </FooterCol>
+
+          <FooterCol title="Resources">
+            <FooterLink href="/products">Technical Catalogue</FooterLink>
+            <FooterLink href="/compare">Compare Products</FooterLink>
+            <FooterLink href="/solutions">Areas of Work</FooterLink>
+            <FooterLink href="/chat/new?name=Quote%20request">Request a Quote</FooterLink>
+          </FooterCol>
+
+          <FooterCol title="Contact">
+            <li className="text-sm text-white/60">Nithin Dholay</li>
+            <li><a href="tel:9011023081" className="text-sm hover:text-white">+91 90110 23081</a></li>
+            <li><a href="mailto:aorexonsystems@outlook.com" className="text-sm hover:text-white">aorexonsystems@outlook.com</a></li>
+          </FooterCol>
         </div>
 
-        <div>
-          <h3 className="mb-3 text-sm font-semibold text-white">Categories</h3>
-          <ul className="space-y-2 text-sm">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link href={`/categories/${c.slug}`} className="hover:text-white">
-                  {c.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-center sm:flex-row">
+            <span className="text-xs text-white/45">
+              © {new Date().getFullYear()} Aorexon Systems. All rights reserved.
+            </span>
+            <span className="mono-label text-white/35">
+              SERVER_LOC: IN-WEST-1 // STATUS: OPERATIONAL
+            </span>
+          </div>
         </div>
-
-        <div>
-          <h3 className="mb-3 text-sm font-semibold text-white">Shop by use case</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link href="/use-cases/swimming-pool" className="hover:text-white">Swimming Pools</Link></li>
-            <li><Link href="/use-cases/water-treatment" className="hover:text-white">Water Treatment</Link></li>
-            <li><Link href="/use-cases/high-pressure" className="hover:text-white">High Pressure</Link></li>
-            <li><Link href="/use-cases/solar-offgrid" className="hover:text-white">Off-Grid / Solar</Link></li>
-            <li><Link href="/use-cases/iot-remote" className="hover:text-white">IoT Remote</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="mb-3 text-sm font-semibold text-white">Areas of work</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link href="/solutions" className="hover:text-white">All areas of work</Link></li>
-            <li><Link href="/solutions/png-gas-pipeline" className="hover:text-white">PNG Gas Pipelines</Link></li>
-            <li><Link href="/solutions/urb-bearings" className="hover:text-white">URB Bearings</Link></li>
-            <li><Link href="/solutions/lynchpin-seating" className="hover:text-white">Lynchpin Seating</Link></li>
-            <li><Link href="/chat/new?name=Quote%20request" className="hover:text-white">Request a Quote</Link></li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-white/10 py-4 text-center text-xs text-white/50">
-        © {new Date().getFullYear()} Aorexon. Product data from SEKO / W&amp;I catalogues.
       </div>
     </footer>
+  );
+}
+
+function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <h3 className="mono-label mb-3 text-white/40">{title}</h3>
+      <ul className="space-y-2">{children}</ul>
+    </div>
+  );
+}
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <li>
+      <Link href={href} className="text-sm text-white/65 hover:text-white">
+        {children}
+      </Link>
+    </li>
   );
 }

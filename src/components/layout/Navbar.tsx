@@ -8,7 +8,8 @@ import { getCurrentUserInfo } from "@/lib/auth";
 
 const navLinks = [
   { href: "/products", label: "Dosing Pumps" },
-  { href: "/solutions/lynchpin-seating", label: "Seating" },
+  { href: "/solutions/lynchpin-seating", label: "Furniture" },
+  { href: "/solutions/png-gas-pipeline", label: "Pipelines" },
   { href: "/solutions", label: "Areas of Work" },
 ];
 
@@ -23,10 +24,13 @@ export async function Navbar() {
         <div className="flex items-center gap-3 py-3">
           <MobileMenu links={navLinks} isAdmin={isAdmin} />
 
-          <Link href="/" className="text-xl font-extrabold uppercase tracking-tight sm:text-2xl">
-            <span className="text-primary">A</span>
-            <span className="text-accent">O</span>
-            <span className="text-primary">REXON</span>
+          <Link href="/" className="flex items-center gap-2 leading-none">
+            <span className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-primary text-sm font-black text-gold">
+              A
+            </span>
+            <span className="hidden text-lg font-extrabold uppercase tracking-tight text-primary sm:block">
+              Aorexon <span className="text-text-muted">Systems</span>
+            </span>
           </Link>
 
           {/* Desktop search inline */}
@@ -34,16 +38,16 @@ export async function Navbar() {
             <SearchBar />
           </div>
 
-          {/* Desktop nav links */}
-          <nav className="hidden items-center gap-5 text-sm font-medium text-text-muted lg:flex">
+          {/* Desktop nav links (mono, technical) */}
+          <nav className="mono-label hidden items-center gap-5 font-semibold text-text-muted lg:flex">
             {navLinks.map((l) => (
-              <Link key={l.href} href={l.href} className="hover:text-primary">
+              <Link key={l.href} href={l.href} className="transition hover:text-accent">
                 {l.label}
               </Link>
             ))}
             {isAdmin && (
-              <Link href="/admin" className="inline-flex items-center gap-1.5 font-semibold text-primary hover:text-accent">
-                <Icon name="layout-dashboard" size={16} /> Admin
+              <Link href="/admin" className="inline-flex items-center gap-1.5 text-accent hover:text-primary">
+                <Icon name="layout-dashboard" size={14} /> Admin
               </Link>
             )}
           </nav>
@@ -51,7 +55,7 @@ export async function Navbar() {
           {/* Always-visible actions (right) */}
           <div className="ml-auto flex items-center gap-3 lg:ml-0">
             {signedIn && (
-              <Link href="/chat" className="text-text-muted hover:text-primary" aria-label="Messages" title="Messages">
+              <Link href="/chat" className="text-text-muted hover:text-accent" aria-label="Messages" title="Messages">
                 <Icon name="handshake" size={22} />
               </Link>
             )}
@@ -60,7 +64,7 @@ export async function Navbar() {
               <UserButton />
             ) : (
               <SignInButton mode="modal">
-                <button className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-text hover:border-primary-light hover:text-primary">
+                <button className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-semibold text-text hover:border-accent hover:text-accent">
                   <Icon name="log-in" size={16} />
                   <span className="hidden sm:inline">Log in</span>
                 </button>
@@ -68,9 +72,9 @@ export async function Navbar() {
             )}
             <Link
               href="/chat/new?name=Quote%20request"
-              className="hidden rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:brightness-110 lg:inline-block"
+              className="mono-label hidden rounded-md bg-gold px-4 py-2.5 font-bold text-primary shadow-sm transition hover:brightness-105 lg:inline-block"
             >
-              Get a Quote
+              Request Quote
             </Link>
           </div>
         </div>

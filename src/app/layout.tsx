@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
@@ -12,10 +12,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const mono = Geist_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Aorexon — Industrial Equipment, Ordered Intelligently",
+  title: "Aorexon Systems — Engineering Solutions. Delivering Excellence.",
   description:
-    "Use-case-first ordering for SEKO / Water & Industry dosing pumps, motor pumps, peristaltic pumps, controllers and accessories. Describe what you need — we find the right product.",
+    "High-precision industrial solutions: SEKO dosing pumps & controllers, PNG gas pipeline installation, URB bearings, and architectural-grade seating.",
 };
 
 export default function RootLayout({
@@ -25,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <html lang="en" className={`${inter.variable} ${mono.variable} h-full antialiased`}>
         <body className="min-h-full flex flex-col bg-bg text-text">
           <Navbar />
           <main className="flex-1">{children}</main>
