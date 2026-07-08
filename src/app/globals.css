@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #14263f;       /* Deep navy (brand) */
+  --color-primary-light: #24405f;
+  --color-ink: #0a1420;           /* Near-black for dark sections */
+  --color-accent: #0e8ba8;        /* Teal (brand, readable w/ white) */
+  --color-accent-light: #5ecfe6;  /* Bright cyan — highlights on dark */
+  --color-gold: #c9a227;          /* Brand gold */
+  --color-bg: #eef2f5;            /* Cool light */
+  --color-surface: #ffffff;
+  --color-border: #d5dde4;
+  --color-text: #0d1a28;
+  --color-text-muted: #5a6b7b;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-ink: var(--color-ink);
+  --color-accent: var(--color-accent);
+  --color-accent-light: var(--color-accent-light);
+  --color-gold: var(--color-gold);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Monospace technical label — SYSTEM_STATUS style */
+.mono-label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+}
+
+/* Blueprint / engineering grid background */
+.tech-grid {
+  background-image:
+    linear-gradient(to right, rgba(20, 38, 63, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 38, 63, 0.055) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.tech-grid-dark {
+  background-image:
+    linear-gradient(to right, rgba(94, 207, 230, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(94, 207, 230, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Scroll-reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* Marquee strip */
+@keyframes aorexon-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: aorexon-marquee 40s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* 3D tilt cards (furniture) */
+.tilt-scene { perspective: 1000px; }
+.tilt-card {
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.5s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-scene:hover .tilt-card {
+  transform: rotateX(6deg) rotateY(-8deg) translateZ(20px);
+  box-shadow: 0 30px 60px -20px rgba(10, 20, 32, 0.45);
+}
+.tilt-card > * { transform: translateZ(0); }
+.tilt-float { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.tilt-scene:hover .tilt-float { transform: translateZ(55px) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .tilt-scene:hover .tilt-card,
+  .tilt-scene:hover .tilt-float { transform: none; }
 }

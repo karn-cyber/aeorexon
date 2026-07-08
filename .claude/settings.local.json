@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm ls *)",
+      "Bash(rm /Users/neelanshu./aorexon/scripts/seed.mjs && echo \"removed standalone seed script\")",
+      "Bash(python3 -)",
+      "Bash(npm run *)",
+      "Bash(curl -s -m 60 -w \"\\\\nHTTP_STATUS=%{http_code}\\\\n\" -X POST http://localhost:3000/api/seed)",
+      "Bash(curl -s -m 30 -w \"\\\\nHTTP_STATUS=%{http_code}\\\\n\" http://localhost:3000/api/seed)",
+      "Bash(curl -s -o /dev/null -w \"tekna-aks.png: %{http_code}, type=%{content_type}\\\\n\" http://localhost:3000/products/product-images/solenoid-wall/tekna-aks/tekna-aks.png)",
+      "Bash(curl -s -o /dev/null -w \"kosmo-mm2-1.jpg: %{http_code}\\\\n\" http://localhost:3000/products/product-images/motor-driven/kosmo-mm2/kosmo-mm2-1.jpg)",
+      "Bash(curl -s \"http://localhost:3000/products/tekna-aks\")",
+      "Bash(curl -s \"http://localhost:3000/products\")",
+      "Bash(curl -s \"http://localhost:3000/\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \"\\(async\\(\\)=>{for\\(const p of ['/','/products','/products/tekna-aks']\\){const r=await fetch\\('http://localhost:3000'+p\\);console.log\\(p, r.status\\);}}\\)\\(\\)\")",
+      "Bash(node -e \"fetch\\('http://localhost:3000/products'\\).then\\(r=>console.log\\('warm',r.status\\)\\)\")",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git push *)",
+      "Bash(node -e \"console.log\\(require\\('@clerk/nextjs/package.json'\\).version\\)\")",
+      "Bash(node -e \"const p=require\\('@clerk/nextjs/package.json'\\); console.log\\('peer next:', \\(p.peerDependencies||{}\\).next\\)\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const p=JSON.parse\\(fs.readFileSync\\('node_modules/@clerk/nextjs/package.json','utf8'\\)\\);console.log\\('peer next:',\\(p.peerDependencies||{}\\).next, '| react:',\\(p.peerDependencies||{}\\).react\\)\")",
+      "Bash(node -e \"fetch\\('http://localhost:3000/'\\).then\\(r=>console.log\\('home',r.status\\)\\)\")",
+      "Bash(node -e \"\\(async\\(\\)=>{for\\(const p of ['/','/products']\\){const r=await fetch\\('http://localhost:3000'+p\\);console.log\\(p,r.status\\);}}\\)\\(\\)\")",
+      "Bash(node -e 'fetch\\('\\\\''http://localhost:3000/products'\\\\''\\).then\\(r=>r.text\\(\\)\\).then\\(t=>{ *)",
+      "Bash(node -e 'fetch\\('\\\\''http://localhost:3000/'\\\\''\\).then\\(r=>r.text\\(\\)\\).then\\(t=>{ *)"
+    ]
+  }
+}
