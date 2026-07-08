@@ -9,18 +9,21 @@ const isProtected = createRouteMatcher(["/admin(.*)", "/account(.*)", "/chat(.*)
 export default clerkMiddleware(async (auth, req) => {
   const host = req.headers.get("host") ?? "";
   const url = req.nextUrl;
+  const { userId, redirectToSignIn } = await auth();
 
   // Serve the CRM on the crm.<domain> subdomain by rewriting to /crm/*.
   // Everything on the CRM subdomain requires sign-in.
   if (host.startsWith("crm.") && !url.pathname.startsWith("/crm") && !url.pathname.startsWith("/api")) {
-    await auth.protect();
+    if (!userId) return redirectToSignIn({ returnBackUrl: req.url });
     const rewritten = url.clone();
     rewritten.pathname = url.pathname === "/" ? "/crm" : `/crm${url.pathname}`;
     return NextResponse.rewrite(rewritten);
   }
 
-  if (isProtected(req)) {
-    await auth.protect();
+  // Explicit redirect for signed-out users (more reliable than auth.protect(),
+  // which can 404 in production when the sign-in URL can't be resolved).
+  if (isProtected(req) && !userId) {
+    return redirectToSignIn({ returnBackUrl: req.url });
   }
 });
 
