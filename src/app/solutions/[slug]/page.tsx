@@ -4,10 +4,11 @@ import { solutionAreas, solutionBySlug } from "@/data/solutions";
 import { Icon } from "@/components/Icon";
 
 // Generic detail page for data-driven areas (PNG gas pipeline, URB bearings).
-// Lynchpin has its own dedicated route with collections.
+// Slugs with their own dedicated route (richer pages) are excluded here.
+const DEDICATED = new Set(["lynchpin-seating", "png-gas-pipeline"]);
 export function generateStaticParams() {
   return solutionAreas
-    .filter((a) => a.href === `/solutions/${a.slug}`)
+    .filter((a) => a.href === `/solutions/${a.slug}` && !DEDICATED.has(a.slug))
     .map((a) => ({ slug: a.slug }));
 }
 

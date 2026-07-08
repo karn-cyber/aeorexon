@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { SearchBar } from "@/components/layout/SearchBar";
 import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
 import { FurnitureStrip } from "@/components/home/FurnitureStrip";
+import { HeroCarousel, type Slide } from "@/components/home/HeroCarousel";
 import { getFeaturedProducts } from "@/lib/products";
 
 type Service = {
@@ -89,46 +89,18 @@ function ServiceCard({ s }: { s: Service }) {
   );
 }
 
+const heroSlides: Slide[] = [
+  { img: "/pipeline/hero.jpg", tag: "GAS INFRASTRUCTURE", title: "PNG Pipeline Installation", href: "/solutions/png-gas-pipeline" },
+  { img: "/hero/dosing-pump.jpg", tag: "FLUID CONTROL", title: "Dosing Pumps & Controllers", href: "/products" },
+  { img: "/partners/lynchpin/cafe-1.jpg", tag: "ARCHITECTURAL", title: "Café & Dining Seating", href: "/solutions/lynchpin-seating" },
+];
+
 export default async function Home() {
   const featured = await getFeaturedProducts();
 
   return (
     <div>
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-ink text-white">
-        <div className="tech-grid-dark absolute inset-0" />
-        <div className="absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-accent/20 blur-[120px]" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 lg:py-28">
-          <p className="mono-label text-accent-light">SYSTEM_STATUS: OPERATIONAL // EST. 1994</p>
-          <h1 className="mt-5 max-w-4xl text-4xl font-extrabold leading-[1.05] sm:text-6xl">
-            Engineering the{" "}
-            <span className="text-accent-light">infrastructure</span> of tomorrow.
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/70">
-            High-precision industrial solutions for complex fluid management, automated
-            monitoring, gas-pipeline infrastructure and architectural-grade furnishing.
-          </p>
-
-          <div className="mt-8 max-w-xl">
-            <SearchBar large />
-          </div>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/products" className="mono-label inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3.5 font-bold text-white transition hover:brightness-110">
-              Explore Capabilities <Icon name="arrow-right" size={15} />
-            </Link>
-            <Link href="/solutions" className="mono-label inline-flex items-center gap-2 rounded-md border border-white/25 px-6 py-3.5 font-bold text-white transition hover:bg-white/10">
-              Areas of Work
-            </Link>
-          </div>
-
-          <div className="mono-label mt-16 hidden justify-end gap-8 text-white/40 sm:flex">
-            <span>COORD_X: 46.802.11</span>
-            <span>COORD_Y: 12.003.04</span>
-            <span>REF_ID: AX-990-AOREXON</span>
-          </div>
-        </div>
-      </section>
+      <HeroCarousel slides={heroSlides} />
 
       {/* ── Core services ── */}
       <section className="tech-grid border-b border-border">
