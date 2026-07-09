@@ -1,35 +1,33 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { products } from "@/data/products";
-import { cafeChairs, diningChairs, type Chair } from "@/data/lynchpin";
+import { lynchpinSeries, type Chair } from "@/data/lynchpin";
 import { priceList } from "@/data/priceList";
 import type { Product } from "@/lib/types";
 
 const DB_NAME = process.env.MONGODB_DB ?? "aorexon";
 
-// Turn a Lynchpin chair into a manageable catalogue product (furniture category).
-function chairToProduct(chair: Chair, series: "Café" | "Dining"): Product {
+// Turn a Lynchpin item into a manageable catalogue product (furniture category).
+function furnitureToProduct(chair: Chair, key: string, title: string): Product {
+  // Café/Dining keep their original slug scheme; new series are namespaced.
+  const slug =
+    key === "cafe" || key === "dining"
+      ? `lynchpin-${chair.slug}`
+      : `lynchpin-${key}-${chair.slug}`;
   return {
-    slug: `lynchpin-${chair.slug}`,
+    slug,
     name: chair.name,
-    fullName: `Lynchpin ${chair.name} — ${series} Chair`,
-    shortDesc: `${series} chair from the Lynchpin seating collection.`,
-    useCaseDesc: `The ${chair.name} is part of Lynchpin's ${series} series — durable, design-forward seating for cafés, restaurants, hospitality and homes.`,
+    fullName: `Lynchpin ${chair.name} — ${title}`,
+    shortDesc: `${title} from the Lynchpin collection.`,
+    useCaseDesc: `The ${chair.name} is part of Lynchpin's ${title} range — durable, design-forward furniture for cafés, restaurants, offices, hospitality and homes.`,
     category: "furniture",
-    subcategory: `${series} Series`,
+    subcategory: title,
     brand: "Lynchpin",
-    usedFor: ["Cafés & restaurants", "Hospitality & lounges", "Home dining"],
+    usedFor: ["Cafés & restaurants", "Offices & hospitality", "Homes"],
     specs: { installationType: undefined },
     models: [],
-    searchTags: [
-      "chair",
-      "seating",
-      "furniture",
-      "lynchpin",
-      series.toLowerCase(),
-      chair.name.toLowerCase(),
-    ],
-    applicationTags: ["furniture", "seating", series === "Café" ? "cafe" : "dining"],
+    searchTags: ["furniture", "lynchpin", key, title.toLowerCase(), chair.name.toLowerCase()],
+    applicationTags: ["furniture", "seating", key],
     upsellRules: [],
     relatedProducts: [],
     images: [{ url: chair.image, alt: chair.name, isPrimary: true }],
@@ -49,10 +47,9 @@ export async function POST() {
     await col.createIndex({ category: 1 });
     await col.createIndex({ applicationTags: 1 });
 
-    const furniture: Product[] = [
-      ...cafeChairs.map((c) => chairToProduct(c, "Café")),
-      ...diningChairs.map((c) => chairToProduct(c, "Dining")),
-    ];
+    const furniture: Product[] = lynchpinSeries.flatMap((s) =>
+      s.items.map((c) => furnitureToProduct(c, s.key, s.title))
+    );
 
     const all: Product[] = [...products, ...furniture];
     for (const p of all) {
