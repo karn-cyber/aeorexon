@@ -15,6 +15,7 @@ import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { getPriceInfo } from "@/lib/pricing";
 import { primaryImage } from "@/lib/format";
 import { Icon } from "@/components/Icon";
+import { JsonLd } from "@/components/Seo";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -26,10 +27,22 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const product = await getProductBySlug(slug);
-  if (!product) return { title: "Product not found — Aorexon" };
+  if (!product) return { title: "Product not found" };
+  const img = primaryImage(product);
+  const ogImage = img && !img.url.startsWith("data:") ? [{ url: img.url, alt: product.name }] : undefined;
+  const title = `${product.fullName ?? product.name}`;
   return {
-    title: `${product.fullName ?? product.name} — Aorexon`,
+    title,
     description: product.shortDesc,
+    alternates: { canonical: `/products/${slug}` },
+    openGraph: {
+      type: "website",
+      title: `${title} — ${product.brand}`,
+      description: product.shortDesc,
+      url: `/products/${slug}`,
+      images: ogImage,
+    },
+    twitter: { card: "summary_large_image", title, description: product.shortDesc },
   };
 }
 
@@ -42,8 +55,33 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
   const priceInfo = getPriceInfo(product);
   const image = primaryImage(product);
 
+  const SITE = "https://www.aorexonsystems.in";
+  const imgAbs = image && !image.url.startsWith("data:") ? SITE + image.url : undefined;
+  const productLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.fullName ?? product.name,
+    description: product.shortDesc,
+    sku: product.slug,
+    brand: { "@type": "Brand", name: product.brand },
+    category: product.subcategory ?? product.category,
+    ...(imgAbs ? { image: [imgAbs] } : {}),
+    ...(priceInfo.hasPrice
+      ? {
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "INR",
+            price: priceInfo.price,
+            availability: "https://schema.org/InStock",
+            url: `${SITE}/products/${product.slug}`,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
+      <JsonLd data={productLd} />
       <nav className="mb-6 text-sm text-text-muted">
         <Link href="/products" className="hover:text-primary">Catalogue</Link>
         <span className="mx-2">/</span>
