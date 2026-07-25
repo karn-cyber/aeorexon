@@ -1,10 +1,57 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { Icon } from "@/components/Icon";
 import { ProductCard } from "@/components/product/ProductCard";
 import { FurnitureStrip } from "@/components/home/FurnitureStrip";
 import { HeroCarousel, type Slide } from "@/components/home/HeroCarousel";
 import { getFeaturedProducts } from "@/lib/products";
+import { JsonLd, faqSchema } from "@/components/Seo";
+
+export const metadata: Metadata = {
+  title: {
+    absolute:
+      "Aorexon Systems | Dosing Pumps, PNG Pipelines, Bearings & Furniture — India",
+  },
+  description:
+    "Aorexon Systems is an Indian industrial-equipment supplier since 1994 — SEKO dosing pumps & water-quality controllers, PNG gas pipeline installation, URB industrial bearings and Lynchpin café, office & dining furniture. Get a quote today.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Aorexon Systems — Industrial Equipment, Pipelines & Furniture in India",
+    description:
+      "Dosing pumps, water-quality controllers, PNG gas pipeline installation, URB bearings and Lynchpin furniture — engineering solutions under one roof since 1994.",
+    url: "/",
+  },
+};
+
+// Q&A copy that doubles as crawlable brand content and FAQPage rich-result data.
+const faqs = [
+  {
+    question: "What does Aorexon Systems do?",
+    answer:
+      "Aorexon Systems is an Indian industrial-equipment supplier established in 1994. We supply SEKO dosing pumps and water-quality controllers, install PNG (Piped Natural Gas) pipelines, distribute URB industrial bearings, and supply Lynchpin café, office and dining furniture.",
+  },
+  {
+    question: "Where is Aorexon Systems located and which areas do you serve?",
+    answer:
+      "Aorexon Systems is based in India and serves customers across the country. Contact us on +91 90110 23081 or at aorexonsystems@outlook.com for specifications, availability and project quotes.",
+  },
+  {
+    question: "What industrial equipment can I buy from Aorexon Systems?",
+    answer:
+      "Our catalogue covers solenoid, motor-driven and peristaltic dosing pumps, single- and multi-parameter water-quality controllers, dosing accessories and spares, URB industrial bearings, and a full range of Lynchpin commercial furniture and seating.",
+  },
+  {
+    question: "Does Aorexon Systems supply café, office and dining furniture?",
+    answer:
+      "Yes. Through the Lynchpin range, Aorexon Systems supplies architectural-grade café chairs, office chairs, dining seating and tables for hospitality and commercial interiors, with hundreds of models across multiple series.",
+  },
+  {
+    question: "How do I request a quote from Aorexon Systems?",
+    answer:
+      "You can request a quote directly from any product or solution page using the “Request a Quote” chat, or call +91 90110 23081. We respond with pricing, specifications and lead times for your requirement.",
+  },
+];
 
 type Service = {
   tag: string;
@@ -228,6 +275,70 @@ export default async function Home() {
               <Link href="/products" className="mono-label mt-6 inline-flex items-center gap-2 rounded-md bg-accent-light px-5 py-3 font-bold text-ink hover:brightness-105">
                 View technical catalogue <Icon name="arrow-right" size={14} />
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── About + FAQ (crawlable brand content + FAQ rich results) ── */}
+      <section className="border-t border-border bg-surface">
+        <JsonLd data={faqSchema(faqs)} />
+        <div className="mx-auto max-w-7xl px-4 py-16">
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
+            <div>
+              <p className="mono-label text-accent">// ABOUT</p>
+              <h2 className="mt-2 text-3xl font-extrabold text-primary">
+                About Aorexon Systems
+              </h2>
+              <p className="mt-4 text-text-muted">
+                <strong>Aorexon Systems</strong> is an Indian industrial-equipment supplier
+                established in 1994. We bring four engineering verticals under one roof:{" "}
+                <strong>SEKO dosing pumps</strong> and <strong>water-quality controllers</strong>,{" "}
+                <strong>PNG gas pipeline installation</strong>, <strong>URB industrial
+                bearings</strong>, and <strong>Lynchpin café, office and dining furniture</strong>.
+              </p>
+              <p className="mt-3 text-text-muted">
+                From precision chemical dosing and automation to gas infrastructure and
+                architectural-grade seating, we help industrial, commercial and hospitality
+                clients across India specify the right equipment, buy online or request a quote —
+                backed by zero-tolerance quality protocols and ISO 9001 standards.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  href="/products"
+                  className="mono-label inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 font-bold text-white transition hover:brightness-110"
+                >
+                  Browse the catalogue <Icon name="arrow-right" size={14} />
+                </Link>
+                <Link
+                  href="/solutions"
+                  className="mono-label inline-flex items-center gap-2 rounded-md border border-border px-5 py-3 font-bold text-primary transition hover:bg-primary hover:text-white"
+                >
+                  Our areas of work
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <p className="mono-label text-accent">// FAQ</p>
+              <h2 className="mt-2 text-3xl font-extrabold text-primary">
+                Frequently asked questions
+              </h2>
+              <div className="mt-6 divide-y divide-border overflow-hidden rounded-lg border border-border bg-bg">
+                {faqs.map((f) => (
+                  <details key={f.question} className="group px-5 py-4">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-primary">
+                      <h3 className="text-base font-semibold">{f.question}</h3>
+                      <Icon
+                        name="chevron-down"
+                        size={18}
+                        className="shrink-0 text-text-muted transition group-open:rotate-180"
+                      />
+                    </summary>
+                    <p className="mt-3 text-sm leading-relaxed text-text-muted">{f.answer}</p>
+                  </details>
+                ))}
+              </div>
             </div>
           </div>
         </div>

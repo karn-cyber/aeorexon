@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { solutionAreas, solutionBySlug } from "@/data/solutions";
 import { Icon } from "@/components/Icon";
+import { JsonLd, breadcrumbSchema, serviceSchema } from "@/components/Seo";
 
 // Generic detail page for data-driven areas (PNG gas pipeline, URB bearings).
 // Slugs with their own dedicated route (richer pages) are excluded here.
@@ -12,10 +14,23 @@ export function generateStaticParams() {
     .map((a) => ({ slug: a.slug }));
 }
 
-export async function generateMetadata(props: PageProps<"/solutions/[slug]">) {
+export async function generateMetadata(
+  props: PageProps<"/solutions/[slug]">
+): Promise<Metadata> {
   const { slug } = await props.params;
   const area = solutionBySlug[slug];
-  return { title: area ? `${area.name} — Aorexon` : "Aorexon" };
+  if (!area) return { title: "Area of work not found" };
+  const description = area.intro ?? area.tagline;
+  return {
+    title: `${area.name} — ${area.partner}`,
+    description,
+    alternates: { canonical: `/solutions/${slug}` },
+    openGraph: {
+      title: `${area.name} | Aorexon Systems`,
+      description,
+      url: `/solutions/${slug}`,
+    },
+  };
 }
 
 export default async function SolutionDetailPage(
@@ -27,6 +42,21 @@ export default async function SolutionDetailPage(
 
   return (
     <div>
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Areas of work", path: "/solutions" },
+          { name: area.name, path: `/solutions/${slug}` },
+        ])}
+      />
+      <JsonLd
+        data={serviceSchema({
+          name: area.name,
+          description: area.intro ?? area.tagline,
+          path: `/solutions/${slug}`,
+          serviceType: area.category,
+        })}
+      />
       <section className="bg-primary text-white">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <nav className="mb-6 text-sm text-white/60">

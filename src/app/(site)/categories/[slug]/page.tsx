@@ -4,6 +4,7 @@ import { categories } from "@/data/categories";
 import { getProductsByCategory } from "@/lib/products";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { Icon } from "@/components/Icon";
+import { JsonLd, breadcrumbSchema, collectionSchema } from "@/components/Seo";
 import type { CategorySlug } from "@/lib/types";
 
 export function generateStaticParams() {
@@ -15,7 +16,18 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const cat = categories.find((c) => c.slug === slug);
-  return { title: cat ? `${cat.name} — Aorexon` : "Category — Aorexon" };
+  if (!cat) return { title: "Category not found" };
+  const description = `${cat.short} Buy ${cat.name.toLowerCase()} from Aorexon Systems — specs, pricing and quotes.`;
+  return {
+    title: `${cat.name} — Buy Online`,
+    description,
+    alternates: { canonical: `/categories/${slug}` },
+    openGraph: {
+      title: `${cat.name} | Aorexon Systems`,
+      description,
+      url: `/categories/${slug}`,
+    },
+  };
 }
 
 export default async function CategoryPage(props: PageProps<"/categories/[slug]">) {
@@ -27,6 +39,21 @@ export default async function CategoryPage(props: PageProps<"/categories/[slug]"
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Catalogue", path: "/products" },
+          { name: cat.name, path: `/categories/${slug}` },
+        ])}
+      />
+      <JsonLd
+        data={collectionSchema({
+          name: cat.name,
+          description: cat.short,
+          path: `/categories/${slug}`,
+          items: products.map((p) => ({ name: p.name, path: `/products/${p.slug}` })),
+        })}
+      />
       <div className="flex items-center gap-3">
         <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Icon name={cat.icon} size={30} />

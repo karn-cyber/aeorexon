@@ -15,7 +15,7 @@ import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { getPriceInfo } from "@/lib/pricing";
 import { primaryImage } from "@/lib/format";
 import { Icon } from "@/components/Icon";
-import { JsonLd } from "@/components/Seo";
+import { JsonLd, breadcrumbSchema } from "@/components/Seo";
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
@@ -82,6 +82,13 @@ export default async function ProductPage(props: PageProps<"/products/[slug]">) 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <JsonLd data={productLd} />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Catalogue", path: "/products" },
+          { name: product.name, path: `/products/${product.slug}` },
+        ])}
+      />
       <nav className="mb-6 text-sm text-text-muted">
         <Link href="/products" className="hover:text-primary">Catalogue</Link>
         <span className="mx-2">/</span>

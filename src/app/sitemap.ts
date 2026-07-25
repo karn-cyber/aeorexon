@@ -24,9 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entry("", 1, "daily"),
     entry("/products", 0.9, "daily"),
     entry("/solutions", 0.8),
-    entry("/solutions/png-gas-pipeline", 0.8),
-    entry("/solutions/urb-bearings", 0.7),
-    entry("/solutions/lynchpin-seating", 0.8),
+    entry("/rfq", 0.5, "monthly"),
     entry("/compare", 0.4, "monthly"),
   ];
 
@@ -34,7 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const useCaseRoutes = useCases.map((u) => entry(`/use-cases/${u.slug}`, 0.6));
   const solutionRoutes = solutionAreas
     .filter((s) => s.href.startsWith("/solutions/"))
-    .map((s) => entry(s.href, 0.7));
+    .map((s) => entry(s.href, 0.8));
 
   let productRoutes: MetadataRoute.Sitemap = [];
   try {
@@ -44,5 +42,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // fall back to static routes only
   }
 
-  return [...staticRoutes, ...categoryRoutes, ...useCaseRoutes, ...solutionRoutes, ...productRoutes];
+  const all = [
+    ...staticRoutes,
+    ...categoryRoutes,
+    ...useCaseRoutes,
+    ...solutionRoutes,
+    ...productRoutes,
+  ];
+
+  // De-duplicate by URL (a route can be declared both statically and via data).
+  const seen = new Map<string, MetadataRoute.Sitemap[number]>();
+  for (const route of all) {
+    if (!seen.has(route.url)) seen.set(route.url, route);
+  }
+  return [...seen.values()];
 }
