@@ -29,13 +29,14 @@ export function Footer() {
           </FooterCol>
 
           <FooterCol title="Resources">
+            <FooterLink href="/services">Services</FooterLink>
             <FooterLink href="/products">Technical Catalogue</FooterLink>
-            <FooterLink href="/compare">Compare Products</FooterLink>
             <FooterLink href="/solutions">Areas of Work</FooterLink>
-            <FooterLink href="/chat/new?name=Quote%20request">Request a Quote</FooterLink>
+            <FooterLink href="/compare">Compare Products</FooterLink>
           </FooterCol>
 
           <FooterCol title="Contact">
+            <FooterLink href="/contact">Contact Aorexon Systems</FooterLink>
             <li className="text-sm text-white/60">Nithin Dholay</li>
             <li><a href="tel:9011023081" className="text-sm hover:text-white">+91 90110 23081</a></li>
             <li><a href="mailto:aorexonsystems@outlook.com" className="text-sm hover:text-white">aorexonsystems@outlook.com</a></li>

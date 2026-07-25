@@ -10,7 +10,8 @@ const navLinks = [
   { href: "/products", label: "Dosing Pumps" },
   { href: "/solutions/lynchpin-seating", label: "Furniture" },
   { href: "/solutions/png-gas-pipeline", label: "Pipelines" },
-  { href: "/solutions", label: "Areas of Work" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export async function Navbar() {

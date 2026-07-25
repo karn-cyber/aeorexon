@@ -15,7 +15,9 @@ const BROWSE: NavLink[] = [
   { href: "/solutions/png-gas-pipeline", label: "PNG Gas Pipelines", icon: "waypoints" },
   { href: "/solutions/lynchpin-seating", label: "Furniture & Seating", icon: "armchair" },
   { href: "/solutions/urb-bearings", label: "URB Bearings", icon: "circle-dot" },
-  { href: "/solutions", label: "Areas of Work", icon: "layout-dashboard" },
+  { href: "/services", label: "Services", icon: "layout-dashboard" },
+  { href: "/solutions", label: "Areas of Work", icon: "building-2" },
+  { href: "/contact", label: "Contact", icon: "mail" },
   { href: "/compare", label: "Compare Products", icon: "sliders-horizontal" },
 ];
 
