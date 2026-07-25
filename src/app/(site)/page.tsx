@@ -14,12 +14,12 @@ export const metadata: Metadata = {
       "Aorexon Systems | Dosing Pumps, PNG Pipelines, Bearings & Furniture — India",
   },
   description:
-    "Aorexon Systems is an Indian industrial-equipment supplier since 1994 — SEKO dosing pumps & water-quality controllers, PNG gas pipeline installation, URB industrial bearings and Lynchpin café, office & dining furniture. Get a quote today.",
+    "Aorexon Systems is an Indian industrial-equipment supplier established in 2026 — SEKO dosing pumps & water-quality controllers, PNG gas pipeline installation, URB industrial bearings and Lynchpin café, office & dining furniture. Get a quote today.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Aorexon Systems — Industrial Equipment, Pipelines & Furniture in India",
     description:
-      "Dosing pumps, water-quality controllers, PNG gas pipeline installation, URB bearings and Lynchpin furniture — engineering solutions under one roof since 1994.",
+      "Dosing pumps, water-quality controllers, PNG gas pipeline installation, URB bearings and Lynchpin furniture — engineering solutions under one roof since 2026.",
     url: "/",
   },
 };
@@ -29,7 +29,7 @@ const faqs = [
   {
     question: "What does Aorexon Systems do?",
     answer:
-      "Aorexon Systems is an Indian industrial-equipment supplier established in 1994. We supply SEKO dosing pumps and water-quality controllers, install PNG (Piped Natural Gas) pipelines, distribute URB industrial bearings, and supply Lynchpin café, office and dining furniture.",
+      "Aorexon Systems is an Indian industrial-equipment supplier founded in 2026 by Nitin Dhole. We supply SEKO dosing pumps and water-quality controllers, install PNG (Piped Natural Gas) pipelines, distribute URB industrial bearings, and supply Lynchpin café, office and dining furniture.",
   },
   {
     question: "Where is Aorexon Systems located and which areas do you serve?",
@@ -292,7 +292,8 @@ export default async function Home() {
               </h2>
               <p className="mt-4 text-text-muted">
                 <strong>Aorexon Systems</strong> is an Indian industrial-equipment supplier
-                established in 1994. We bring four engineering verticals under one roof:{" "}
+                founded in 2026 by <strong>Nitin Dhole</strong>. We bring four engineering
+                verticals under one roof:{" "}
                 <strong>SEKO dosing pumps</strong> and <strong>water-quality controllers</strong>,{" "}
                 <strong>PNG gas pipeline installation</strong>, <strong>URB industrial
                 bearings</strong>, and <strong>Lynchpin café, office and dining furniture</strong>.

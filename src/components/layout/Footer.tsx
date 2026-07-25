@@ -17,7 +17,7 @@ export function Footer() {
             <p className="mono-label mt-3 text-gold/90">Engineering Solutions. Delivering Excellence.</p>
             <p className="mt-3 max-w-xs text-sm text-white/55">
               High-precision industrial solutions for fluid management, gas infrastructure,
-              bearings and architectural-grade seating. Since 1994.
+              bearings and architectural-grade seating. Since 2026.
             </p>
           </div>
 
@@ -37,7 +37,7 @@ export function Footer() {
 
           <FooterCol title="Contact">
             <FooterLink href="/contact">Contact Aorexon Systems</FooterLink>
-            <li className="text-sm text-white/60">Nithin Dholay</li>
+            <li className="text-sm text-white/60">Nitin Dhole</li>
             <li><a href="tel:9011023081" className="text-sm hover:text-white">+91 90110 23081</a></li>
             <li><a href="mailto:aorexonsystems@outlook.com" className="text-sm hover:text-white">aorexonsystems@outlook.com</a></li>
           </FooterCol>

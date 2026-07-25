@@ -47,7 +47,7 @@ export function HeroCarousel({ slides }: { slides: Slide[] }) {
       <div className="tech-grid-dark absolute inset-0 opacity-60" />
 
       <div className="relative mx-auto max-w-7xl px-4 py-20 lg:py-28">
-        <p className="mono-label text-accent-light">SYSTEM_STATUS: OPERATIONAL // EST. 1994</p>
+        <p className="mono-label text-accent-light">SYSTEM_STATUS: OPERATIONAL // EST. 2026</p>
         <h1 className="mt-5 max-w-4xl text-4xl font-extrabold leading-[1.05] sm:text-6xl">
           Engineering the <span className="text-accent-light">infrastructure</span> of tomorrow.
         </h1>

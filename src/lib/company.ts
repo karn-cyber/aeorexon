@@ -3,7 +3,7 @@
 export const COMPANY = {
   name: "Aorexon Systems",
   tagline: "Engineering Solutions. Delivering Excellence.",
-  contactPerson: "Nithin Dholay",
+  contactPerson: "Nitin Dhole",
   phone: "+91 90110 23081",
   email: "aorexonsystems@outlook.com",
   address: "India",

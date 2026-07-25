@@ -30,8 +30,9 @@ export const organizationSchema: Record<string, unknown> = {
   image: `${SITE_URL}/hero/dosing-pump.jpg`,
   slogan: "Engineering Solutions. Delivering Excellence.",
   description:
-    "Aorexon Systems is an Indian industrial-equipment supplier: SEKO dosing pumps & water-quality controllers, PNG gas pipeline installation, URB industrial bearings and Lynchpin café, office and dining furniture. Established 1994.",
-  foundingDate: "1994",
+    "Aorexon Systems is an Indian industrial-equipment supplier: SEKO dosing pumps & water-quality controllers, PNG gas pipeline installation, URB industrial bearings and Lynchpin café, office and dining furniture. Established 2026.",
+  foundingDate: "2026",
+  founder: { "@type": "Person", name: "Nitin Dhole" },
   email: "aorexonsystems@outlook.com",
   telephone: "+91-9011023081",
   address: {

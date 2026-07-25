@@ -129,7 +129,7 @@ export default function ContactPage() {
               <div>
                 <dt className="mono-label text-text-muted">Business</dt>
                 <dd className="mt-1 flex items-center gap-2 font-semibold text-text">
-                  <Icon name="building-2" size={16} className="text-accent" /> Industrial equipment supplier · Est. 1994
+                  <Icon name="building-2" size={16} className="text-accent" /> Industrial equipment supplier · Est. 2026
                 </dd>
               </div>
               <div>

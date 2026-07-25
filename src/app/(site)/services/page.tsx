@@ -72,7 +72,7 @@ export default function ServicesPage() {
               Aorexon Systems brings four engineering service lines under one roof — fluid
               dosing &amp; automation, gas infrastructure, industrial bearings and
               architectural-grade furniture — for industrial, commercial and hospitality clients
-              across India since 1994.
+              across India since 2026.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/contact" className="mono-label inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3.5 font-bold text-white transition hover:brightness-110">
